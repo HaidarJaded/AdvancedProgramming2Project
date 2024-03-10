@@ -53,9 +53,11 @@ namespace APP2EFCore.Migrations
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<DateTime>("Date")
-                        .HasColumnType("datetime2");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("datetime2")
+                        .HasDefaultValue(new DateTime(2024, 3, 10, 20, 52, 55, 510, DateTimeKind.Local).AddTicks(6058));
 
-                    b.Property<decimal>("Total")
+                    b.Property<decimal?>("Total")
                         .HasColumnType("decimal(18, 2)");
 
                     b.Property<string>("Type")
@@ -81,7 +83,7 @@ namespace APP2EFCore.Migrations
                     b.Property<int>("Count")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int")
-                        .HasDefaultValue(0);
+                        .HasDefaultValue(1);
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -105,34 +107,35 @@ namespace APP2EFCore.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<int>("CategoryId")
-                        .HasColumnType("int");
-
                     b.Property<DateTime>("Date")
-                        .HasColumnType("datetime2");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("datetime2")
+                        .HasDefaultValue(new DateTime(2024, 3, 10, 20, 52, 55, 511, DateTimeKind.Local).AddTicks(4062));
 
                     b.Property<int>("InvoiceId")
                         .HasColumnType("int");
 
-                    b.Property<int>("ProductId")
+                    b.Property<int>("ProducerId")
                         .HasColumnType("int");
 
                     b.Property<decimal>("ProductPrice")
                         .HasColumnType("decimal(18, 2)");
 
                     b.Property<int>("ProductsCount")
-                        .HasColumnType("int");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasDefaultValue(1);
 
                     b.Property<decimal>("ProductsTotalPrice")
-                        .HasColumnType("decimal(18, 2)");
+                        .ValueGeneratedOnAddOrUpdate()
+                        .HasColumnType("decimal(18, 2)")
+                        .HasComputedColumnSql("[ProductsCount]*[ProductPrice]");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("CategoryId");
-
                     b.HasIndex("InvoiceId");
 
-                    b.HasIndex("ProductId");
+                    b.HasIndex("ProducerId");
 
                     b.ToTable("Purchases");
                 });
@@ -146,15 +149,16 @@ namespace APP2EFCore.Migrations
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<int>("CheckReport")
-                        .HasColumnType("int");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasDefaultValue(0);
 
                     b.Property<DateTime>("Date")
-                        .HasColumnType("datetime2");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("datetime2")
+                        .HasDefaultValue(new DateTime(2024, 3, 10, 20, 52, 55, 510, DateTimeKind.Local).AddTicks(7362));
 
                     b.Property<int>("InvoiceId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("ProductCount")
                         .HasColumnType("int");
 
                     b.Property<int>("ProductId")
@@ -163,8 +167,15 @@ namespace APP2EFCore.Migrations
                     b.Property<decimal>("ProductPrice")
                         .HasColumnType("decimal(10, 2)");
 
+                    b.Property<int>("ProductsCount")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasDefaultValue(1);
+
                     b.Property<decimal>("ProductsTotalPrice")
-                        .HasColumnType("decimal(18, 2)");
+                        .ValueGeneratedOnAddOrUpdate()
+                        .HasColumnType("decimal(18, 2)")
+                        .HasComputedColumnSql("[ProductsCount]*[ProductPrice]");
 
                     b.Property<int>("UserId")
                         .HasColumnType("int");
@@ -203,9 +214,8 @@ namespace APP2EFCore.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("Type")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<int>("Type")
+                        .HasColumnType("int");
 
                     b.HasKey("Id");
 
@@ -225,12 +235,6 @@ namespace APP2EFCore.Migrations
 
             modelBuilder.Entity("APP2EFCore.Purchase", b =>
                 {
-                    b.HasOne("APP2EFCore.Category", "Category")
-                        .WithMany("Purchases")
-                        .HasForeignKey("CategoryId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
                     b.HasOne("APP2EFCore.Invoice", "Invoice")
                         .WithMany("Purchases")
                         .HasForeignKey("InvoiceId")
@@ -239,11 +243,9 @@ namespace APP2EFCore.Migrations
 
                     b.HasOne("APP2EFCore.Product", "Producer")
                         .WithMany("Purchases")
-                        .HasForeignKey("ProductId")
+                        .HasForeignKey("ProducerId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-
-                    b.Navigation("Category");
 
                     b.Navigation("Invoice");
 
@@ -280,8 +282,6 @@ namespace APP2EFCore.Migrations
             modelBuilder.Entity("APP2EFCore.Category", b =>
                 {
                     b.Navigation("Products");
-
-                    b.Navigation("Purchases");
                 });
 
             modelBuilder.Entity("APP2EFCore.Invoice", b =>

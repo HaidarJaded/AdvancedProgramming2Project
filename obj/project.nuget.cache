@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "SwiYBMCCwZ2hh5a9pCLfOunrJnPKmcVzBPnHsbfEaMTaCZIR5I2+U6WfLX32G5Ev+HPaecACyccFN4eziHlEMg==",
+  "dgSpecHash": "5udUQ1wS81JyJt0fQxS8QkGQRpxdiS1C/79GIZNZMQ3Dp4whIktwSsR8SAsTjmM7yCIwjEnAGf1aNAGCL1OhTQ==",
   "success": true,
-  "projectFilePath": "E:\\CSProjects\\APP2EFCore\\APP2EFCore.csproj",
+  "projectFilePath": "E:\\CSProjects\\AdvancedProgrammigEFCore\\APP2EFCore.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\Administrator\\.nuget\\packages\\azure.core\\1.35.0\\azure.core.1.35.0.nupkg.sha512",
     "C:\\Users\\Administrator\\.nuget\\packages\\azure.identity\\1.10.3\\azure.identity.1.10.3.nupkg.sha512",

@@ -33,7 +33,7 @@
             textBoxPassword = new TextBox();
             label1 = new Label();
             textBoxEmail = new TextBox();
-            linkLabel1 = new LinkLabel();
+            linkLabelCreateAccount = new LinkLabel();
             SuspendLayout();
             // 
             // button1
@@ -44,6 +44,7 @@
             button1.TabIndex = 2;
             button1.Text = "تسجيل الدخول";
             button1.UseVisualStyleBackColor = true;
+            button1.Click += button1_Click;
             // 
             // label2
             // 
@@ -63,6 +64,7 @@
             textBoxPassword.PasswordChar = '*';
             textBoxPassword.Size = new Size(234, 23);
             textBoxPassword.TabIndex = 1;
+            textBoxPassword.KeyPress += textBoxPassword_KeyPress;
             // 
             // label1
             // 
@@ -82,16 +84,17 @@
             textBoxEmail.Size = new Size(234, 23);
             textBoxEmail.TabIndex = 0;
             // 
-            // linkLabel1
+            // linkLabelCreateAccount
             // 
-            linkLabel1.AutoSize = true;
-            linkLabel1.Font = new Font("Segoe UI", 12F);
-            linkLabel1.Location = new Point(137, 304);
-            linkLabel1.Name = "linkLabel1";
-            linkLabel1.Size = new Size(88, 21);
-            linkLabel1.TabIndex = 3;
-            linkLabel1.TabStop = true;
-            linkLabel1.Text = "انشاء حساب";
+            linkLabelCreateAccount.AutoSize = true;
+            linkLabelCreateAccount.Font = new Font("Segoe UI", 12F);
+            linkLabelCreateAccount.Location = new Point(137, 304);
+            linkLabelCreateAccount.Name = "linkLabelCreateAccount";
+            linkLabelCreateAccount.Size = new Size(88, 21);
+            linkLabelCreateAccount.TabIndex = 3;
+            linkLabelCreateAccount.TabStop = true;
+            linkLabelCreateAccount.Text = "انشاء حساب";
+            linkLabelCreateAccount.LinkClicked += linkLabelCreateAccount_LinkClicked;
             // 
             // FormLogin
             // 
@@ -99,7 +102,7 @@
             AutoScaleMode = AutoScaleMode.Font;
             BackColor = Color.Black;
             ClientSize = new Size(363, 378);
-            Controls.Add(linkLabel1);
+            Controls.Add(linkLabelCreateAccount);
             Controls.Add(button1);
             Controls.Add(textBoxEmail);
             Controls.Add(textBoxPassword);
@@ -113,6 +116,7 @@
             ShowIcon = false;
             StartPosition = FormStartPosition.CenterScreen;
             Text = "تسجيل الدخول";
+            Load += FormLogin_Load;
             ResumeLayout(false);
             PerformLayout();
         }
@@ -124,6 +128,6 @@
         private TextBox textBoxPassword;
         private Label label1;
         private TextBox textBoxEmail;
-        private LinkLabel linkLabel1;
+        private LinkLabel linkLabelCreateAccount;
     }
 }

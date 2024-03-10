@@ -32,8 +32,8 @@ namespace APP2EFCore.Migrations
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Type = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Total = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
-                    Date = table.Column<DateTime>(type: "datetime2", nullable: false)
+                    Total = table.Column<decimal>(type: "decimal(18,2)", nullable: true),
+                    Date = table.Column<DateTime>(type: "datetime2", nullable: false, defaultValue: new DateTime(2024, 3, 10, 20, 52, 55, 510, DateTimeKind.Local).AddTicks(6058))
                 },
                 constraints: table =>
                 {
@@ -49,7 +49,7 @@ namespace APP2EFCore.Migrations
                     Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Email = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Password = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Type = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                    Type = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -64,7 +64,7 @@ namespace APP2EFCore.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Price = table.Column<decimal>(type: "decimal(10,2)", nullable: false),
-                    Count = table.Column<int>(type: "int", nullable: false, defaultValue: 0),
+                    Count = table.Column<int>(type: "int", nullable: false, defaultValue: 1),
                     CategoryId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
@@ -84,23 +84,16 @@ namespace APP2EFCore.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    ProductId = table.Column<int>(type: "int", nullable: false),
-                    ProductsCount = table.Column<int>(type: "int", nullable: false),
+                    ProductsCount = table.Column<int>(type: "int", nullable: false, defaultValue: 1),
                     ProductPrice = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
-                    ProductsTotalPrice = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
-                    Date = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    CategoryId = table.Column<int>(type: "int", nullable: false),
-                    InvoiceId = table.Column<int>(type: "int", nullable: false)
+                    ProductsTotalPrice = table.Column<decimal>(type: "decimal(18,2)", nullable: false, computedColumnSql: "[ProductsCount]*[ProductPrice]"),
+                    Date = table.Column<DateTime>(type: "datetime2", nullable: false, defaultValue: new DateTime(2024, 3, 10, 20, 52, 55, 511, DateTimeKind.Local).AddTicks(4062)),
+                    InvoiceId = table.Column<int>(type: "int", nullable: false),
+                    ProducerId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Purchases", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_Purchases_Categories_CategoryId",
-                        column: x => x.CategoryId,
-                        principalTable: "Categories",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_Purchases_Invoices_InvoiceId",
                         column: x => x.InvoiceId,
@@ -108,8 +101,8 @@ namespace APP2EFCore.Migrations
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_Purchases_Products_ProductId",
-                        column: x => x.ProductId,
+                        name: "FK_Purchases_Products_ProducerId",
+                        column: x => x.ProducerId,
                         principalTable: "Products",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
@@ -121,15 +114,15 @@ namespace APP2EFCore.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    ProductCount = table.Column<int>(type: "int", nullable: false),
+                    ProductsCount = table.Column<int>(type: "int", nullable: false, defaultValue: 1),
                     ProductPrice = table.Column<decimal>(type: "decimal(10,2)", nullable: false),
+                    ProductsTotalPrice = table.Column<decimal>(type: "decimal(18,2)", nullable: false, computedColumnSql: "[ProductsCount]*[ProductPrice]"),
+                    Date = table.Column<DateTime>(type: "datetime2", nullable: false, defaultValue: new DateTime(2024, 3, 10, 20, 52, 55, 510, DateTimeKind.Local).AddTicks(7362)),
+                    CheckReport = table.Column<int>(type: "int", nullable: false, defaultValue: 0),
+                    profitRatio = table.Column<int>(type: "int", nullable: false),
                     InvoiceId = table.Column<int>(type: "int", nullable: false),
                     ProductId = table.Column<int>(type: "int", nullable: false),
-                    UserId = table.Column<int>(type: "int", nullable: false),
-                    ProductsTotalPrice = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
-                    Date = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    CheckReport = table.Column<int>(type: "int", nullable: false),
-                    profitRatio = table.Column<int>(type: "int", nullable: false)
+                    UserId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -160,19 +153,14 @@ namespace APP2EFCore.Migrations
                 column: "CategoryId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Purchases_CategoryId",
-                table: "Purchases",
-                column: "CategoryId");
-
-            migrationBuilder.CreateIndex(
                 name: "IX_Purchases_InvoiceId",
                 table: "Purchases",
                 column: "InvoiceId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Purchases_ProductId",
+                name: "IX_Purchases_ProducerId",
                 table: "Purchases",
-                column: "ProductId");
+                column: "ProducerId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Sales_InvoiceId",

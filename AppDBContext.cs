@@ -11,35 +11,37 @@ public class AppDBContext : DbContext
     }
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
-        modelBuilder.Entity<Category>()
-          .Property(p => p.ProductsCount)
-          .HasDefaultValue(0);
-        modelBuilder.Entity<Product>()
-          .Property(p => p.Count)
-          .HasDefaultValue(0);
+        modelBuilder.Entity<Category>().Property(c => c.ProductsCount).HasDefaultValue(0);
 
-        modelBuilder.Entity<Invoice>()
-       .Property(i => i.Total)
-       .HasColumnType("decimal(18, 2)");
+        modelBuilder.Entity<Product>().Property(p => p.Count).HasDefaultValue(1);
 
-        modelBuilder.Entity<Product>()
-            .Property(p => p.Price)
-            .HasColumnType("decimal(10, 2)");
+        modelBuilder.Entity<Product>().Property(p => p.Price).HasColumnType("decimal(10, 2)");
 
-        modelBuilder.Entity<Purchase>()
-            .Property(p => p.ProductPrice)
-            .HasColumnType("decimal(18, 2)");
+        modelBuilder.Entity<Invoice>().Property(i => i.Date).HasDefaultValue(System.DateTime.Now);
 
-        modelBuilder.Entity<Purchase>()
-            .Property(p => p.ProductsTotalPrice)
-            .HasColumnType("decimal(18, 2)");
+        modelBuilder.Entity<Invoice>().Property(i => i.Total).HasColumnType("decimal(18, 2)");
 
-        modelBuilder.Entity<Sale>()
-            .Property(s => s.ProductPrice)
-            .HasColumnType("decimal(10, 2)");
-        modelBuilder.Entity<Sale>()
-             .Property(s => s.ProductsTotalPrice)
-             .HasColumnType("decimal(18, 2)");
+        modelBuilder.Entity<Sale>().Property(s => s.Date).HasDefaultValue(System.DateTime.Now);
+
+        modelBuilder.Entity<Sale>().Property(s => s.CheckReport).HasDefaultValue(0);
+
+        modelBuilder.Entity<Sale>().Property(s => s.ProductsTotalPrice).HasComputedColumnSql("[ProductsCount]*[ProductPrice]");
+
+        modelBuilder.Entity<Sale>().Property(s => s.ProductPrice).HasColumnType("decimal(10, 2)");
+
+        modelBuilder.Entity<Sale>().Property(s => s.ProductsTotalPrice).HasColumnType("decimal(18, 2)");
+
+        modelBuilder.Entity <Sale>().Property(s => s.ProductsCount).HasDefaultValue(1);
+
+        modelBuilder.Entity<Purchase>().Property(p => p.ProductsCount).HasDefaultValue(1);
+
+        modelBuilder.Entity<Purchase>().Property(p => p.ProductsTotalPrice).HasComputedColumnSql("[ProductsCount]*[ProductPrice]");
+
+        modelBuilder.Entity<Purchase>().Property(p => p.Date).HasDefaultValue(System.DateTime.Now);
+
+        modelBuilder.Entity<Purchase>().Property(p => p.ProductPrice).HasColumnType("decimal(18, 2)");
+
+        modelBuilder.Entity<Purchase>().Property(p => p.ProductsTotalPrice).HasColumnType("decimal(18, 2)");
     }
     public DbSet<Category> Categories { get; set; }
     public DbSet<Invoice> Invoices { get; set; }
