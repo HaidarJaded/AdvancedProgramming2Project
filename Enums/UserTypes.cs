@@ -1,5 +1,4 @@
-﻿
-namespace APP2EFCore
+﻿namespace APP2EFCore.Enums
 {
     public enum UserTypes
     {

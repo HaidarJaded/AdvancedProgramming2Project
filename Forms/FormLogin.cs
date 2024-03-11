@@ -15,7 +15,8 @@ public partial class FormLogin : Form
 
         using (AppDBContext db = new AppDBContext())
         {
-            User user = db.Users.FirstOrDefault(x => x.Email == email && x.Password == password);
+            User user = db.Users.FirstOrDefault(x => x.Email == email
+                                                && x.Password == PasswordEncrypter.EncryptPassword(password));
 
             if (user == null)
             {
@@ -66,7 +67,11 @@ public partial class FormLogin : Form
         if (e.KeyChar == (char)Keys.Enter)
         {
             e.Handled = true;
-            Login(textBoxEmail.Text, textBoxPassword.Text);
+            if (Login(textBoxEmail.Text, textBoxPassword.Text))
+            {
+                textBoxEmail.Text = "";
+                textBoxPassword.Text = "";
+            }
         }
     }
 
@@ -74,6 +79,10 @@ public partial class FormLogin : Form
     {
         Forms.FormAddAdmin formAddAdmin = new Forms.FormAddAdmin();
         formAddAdmin.ShowDialog();
-        linkLabelCreateAccount.Visible = false;
+        AppDBContext db = new AppDBContext();
+        if (db.Users.Count() != 0)
+        {
+            linkLabelCreateAccount.Visible = false;
+        }
     }
 }

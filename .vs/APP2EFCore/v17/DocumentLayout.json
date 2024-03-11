@@ -3,16 +3,24 @@
   "WorkspaceRootPath": "E:\\CSProjects\\AdvancedProgrammigEFCore\\",
   "Documents": [
     {
+      "AbsoluteMoniker": "D:0:0:{40F597B2-C00C-4977-93D4-32D9EDA43D31}|APP2EFCore.csproj|e:\\csprojects\\advancedprogrammigefcore\\forms\\formmain.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{40F597B2-C00C-4977-93D4-32D9EDA43D31}|APP2EFCore.csproj|solutionrelative:forms\\formmain.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{40F597B2-C00C-4977-93D4-32D9EDA43D31}|APP2EFCore.csproj|e:\\csprojects\\advancedprogrammigefcore\\forms\\formmain.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}|Form",
+      "RelativeMoniker": "D:0:0:{40F597B2-C00C-4977-93D4-32D9EDA43D31}|APP2EFCore.csproj|solutionrelative:forms\\formmain.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}|Form"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{40F597B2-C00C-4977-93D4-32D9EDA43D31}|APP2EFCore.csproj|e:\\csprojects\\advancedprogrammigefcore\\enums\\pagestate.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{40F597B2-C00C-4977-93D4-32D9EDA43D31}|APP2EFCore.csproj|solutionrelative:enums\\pagestate.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{40F597B2-C00C-4977-93D4-32D9EDA43D31}|APP2EFCore.csproj|e:\\csprojects\\advancedprogrammigefcore\\app2efcore.csproj||{FA3CD31E-987B-443A-9B81-186104E8DAC1}|",
+      "RelativeMoniker": "D:0:0:{40F597B2-C00C-4977-93D4-32D9EDA43D31}|APP2EFCore.csproj|solutionrelative:app2efcore.csproj||{FA3CD31E-987B-443A-9B81-186104E8DAC1}|"
+    },
+    {
       "AbsoluteMoniker": "D:0:0:{40F597B2-C00C-4977-93D4-32D9EDA43D31}|APP2EFCore.csproj|e:\\csprojects\\advancedprogrammigefcore\\forms\\formlogin.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{40F597B2-C00C-4977-93D4-32D9EDA43D31}|APP2EFCore.csproj|solutionrelative:forms\\formlogin.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{40F597B2-C00C-4977-93D4-32D9EDA43D31}|APP2EFCore.csproj|e:\\csprojects\\advancedprogrammigefcore\\forms\\formlogin.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}|Form",
-      "RelativeMoniker": "D:0:0:{40F597B2-C00C-4977-93D4-32D9EDA43D31}|APP2EFCore.csproj|solutionrelative:forms\\formlogin.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}|Form"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{40F597B2-C00C-4977-93D4-32D9EDA43D31}|APP2EFCore.csproj|e:\\csprojects\\advancedprogrammigefcore\\app2efcore.csproj||{04B8AB82-A572-4FEF-95CE-5222444B6B64}|",
-      "RelativeMoniker": "D:0:0:{40F597B2-C00C-4977-93D4-32D9EDA43D31}|APP2EFCore.csproj|solutionrelative:app2efcore.csproj||{04B8AB82-A572-4FEF-95CE-5222444B6B64}|"
     },
     {
       "AbsoluteMoniker": "D:0:0:{40F597B2-C00C-4977-93D4-32D9EDA43D31}|APP2EFCore.csproj|e:\\csprojects\\advancedprogrammigefcore\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
@@ -26,54 +34,85 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 1,
+          "SelectedChildIndex": 4,
           "Children": [
+            {
+              "$type": "Bookmark",
+              "Name": "ST:128:0:{116d2292-e37d-41cd-a077-ebacac4c8cc4}"
+            },
             {
               "$type": "Document",
               "DocumentIndex": 2,
+              "Title": "PageState.cs",
+              "DocumentMoniker": "E:\\CSProjects\\AdvancedProgrammigEFCore\\Enums\\PageState.cs",
+              "RelativeDocumentMoniker": "Enums\\PageState.cs",
+              "ToolTip": "E:\\CSProjects\\AdvancedProgrammigEFCore\\Enums\\PageState.cs",
+              "RelativeToolTip": "Enums\\PageState.cs",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAABIAAAAQAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-03-11T12:00:23.236Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
               "Title": "APP2EFCore",
               "DocumentMoniker": "E:\\CSProjects\\AdvancedProgrammigEFCore\\APP2EFCore.csproj",
               "RelativeDocumentMoniker": "APP2EFCore.csproj",
               "ToolTip": "E:\\CSProjects\\AdvancedProgrammigEFCore\\APP2EFCore.csproj",
               "RelativeToolTip": "APP2EFCore.csproj",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000758|",
-              "WhenOpened": "2024-03-10T18:03:54.959Z",
+              "WhenOpened": "2024-03-11T11:59:16.671Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 0,
+              "DocumentIndex": 4,
               "Title": "FormLogin.cs",
               "DocumentMoniker": "E:\\CSProjects\\AdvancedProgrammigEFCore\\Forms\\FormLogin.cs",
               "RelativeDocumentMoniker": "Forms\\FormLogin.cs",
               "ToolTip": "E:\\CSProjects\\AdvancedProgrammigEFCore\\Forms\\FormLogin.cs",
               "RelativeToolTip": "Forms\\FormLogin.cs",
-              "ViewState": "AQIAAAIAAAAAAAAAAAAswA0AAAAJAAAA",
+              "ViewState": "AQIAAAIAAAAAAAAAAAD4vxEAAAAYAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-03-10T18:01:10.948Z",
+              "WhenOpened": "2024-03-11T11:24:59.451Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "FormMain.cs",
+              "DocumentMoniker": "E:\\CSProjects\\AdvancedProgrammigEFCore\\Forms\\FormMain.cs",
+              "RelativeDocumentMoniker": "Forms\\FormMain.cs",
+              "ToolTip": "E:\\CSProjects\\AdvancedProgrammigEFCore\\Forms\\FormMain.cs",
+              "RelativeToolTip": "Forms\\FormMain.cs",
+              "ViewState": "AQIAAHwAAAAAAAAAAAAhwEQAAAApAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-03-11T10:35:09.376Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
               "DocumentIndex": 1,
-              "Title": "FormLogin.cs [Design]",
-              "DocumentMoniker": "E:\\CSProjects\\AdvancedProgrammigEFCore\\Forms\\FormLogin.cs",
-              "RelativeDocumentMoniker": "Forms\\FormLogin.cs",
-              "ToolTip": "E:\\CSProjects\\AdvancedProgrammigEFCore\\Forms\\FormLogin.cs [Design]",
-              "RelativeToolTip": "Forms\\FormLogin.cs [Design]",
+              "Title": "FormMain.cs [Design]",
+              "DocumentMoniker": "E:\\CSProjects\\AdvancedProgrammigEFCore\\Forms\\FormMain.cs",
+              "RelativeDocumentMoniker": "Forms\\FormMain.cs",
+              "ToolTip": "E:\\CSProjects\\AdvancedProgrammigEFCore\\Forms\\FormMain.cs [Design]",
+              "RelativeToolTip": "Forms\\FormMain.cs [Design]",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-03-10T18:01:08.056Z",
+              "WhenOpened": "2024-03-11T10:16:48.32Z",
               "EditorCaption": " [Design]"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 3,
+              "DocumentIndex": 5,
               "Title": "Program.cs",
               "DocumentMoniker": "E:\\CSProjects\\AdvancedProgrammigEFCore\\Program.cs",
               "RelativeDocumentMoniker": "Program.cs",
               "ToolTip": "E:\\CSProjects\\AdvancedProgrammigEFCore\\Program.cs",
               "RelativeToolTip": "Program.cs",
-              "ViewState": "AQIAAAAAAAAAAAAAAAAAAA0AAAAvAAAA",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAAA0AAAAqAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2024-03-10T17:54:42.699Z",
               "EditorCaption": ""
