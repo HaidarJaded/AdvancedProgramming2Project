@@ -55,14 +55,13 @@ namespace APP2EFCore.Migrations
                     b.Property<DateTime>("Date")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("datetime2")
-                        .HasDefaultValue(new DateTime(2024, 3, 10, 20, 52, 55, 510, DateTimeKind.Local).AddTicks(6058));
+                        .HasDefaultValueSql("getdate()");
 
                     b.Property<decimal?>("Total")
                         .HasColumnType("decimal(18, 2)");
 
-                    b.Property<string>("Type")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<int>("Type")
+                        .HasColumnType("int");
 
                     b.HasKey("Id");
 
@@ -110,12 +109,12 @@ namespace APP2EFCore.Migrations
                     b.Property<DateTime>("Date")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("datetime2")
-                        .HasDefaultValue(new DateTime(2024, 3, 10, 20, 52, 55, 511, DateTimeKind.Local).AddTicks(4062));
+                        .HasDefaultValueSql("getdate()");
 
                     b.Property<int>("InvoiceId")
                         .HasColumnType("int");
 
-                    b.Property<int>("ProducerId")
+                    b.Property<int>("ProductId")
                         .HasColumnType("int");
 
                     b.Property<decimal>("ProductPrice")
@@ -135,7 +134,7 @@ namespace APP2EFCore.Migrations
 
                     b.HasIndex("InvoiceId");
 
-                    b.HasIndex("ProducerId");
+                    b.HasIndex("ProductId");
 
                     b.ToTable("Purchases");
                 });
@@ -156,7 +155,7 @@ namespace APP2EFCore.Migrations
                     b.Property<DateTime>("Date")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("datetime2")
-                        .HasDefaultValue(new DateTime(2024, 3, 10, 20, 52, 55, 510, DateTimeKind.Local).AddTicks(7362));
+                        .HasDefaultValueSql("getdate()");
 
                     b.Property<int>("InvoiceId")
                         .HasColumnType("int");
@@ -241,15 +240,15 @@ namespace APP2EFCore.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("APP2EFCore.Product", "Producer")
+                    b.HasOne("APP2EFCore.Product", "Product")
                         .WithMany("Purchases")
-                        .HasForeignKey("ProducerId")
+                        .HasForeignKey("ProductId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("Invoice");
 
-                    b.Navigation("Producer");
+                    b.Navigation("Product");
                 });
 
             modelBuilder.Entity("APP2EFCore.Sale", b =>

@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("APP2EFCore")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+bfc4a8b451213898fdefb0ddc22f073ba78a4480")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+14f23a3363cc1494bde7af0f858427174728b3c0")]
 [assembly: System.Reflection.AssemblyProductAttribute("APP2EFCore")]
 [assembly: System.Reflection.AssemblyTitleAttribute("APP2EFCore")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

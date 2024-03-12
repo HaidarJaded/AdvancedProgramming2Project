@@ -12,11 +12,11 @@ namespace APP2EFCore.Forms
         //Thread ShowMonthlyReportsThread;
         //Thread ShowDailyReportThread;
         Thread ShowCategoriesThread;
-        //Thread ShowPurchasesThread;
+        Thread ShowPurchasesThread;
         //Thread ShowproducersThread;
         //Thread ShowinvoicesThread;
         //Thread ShowVendorsThread;
-        //Thread ShowSalesThread;
+        Thread ShowSalesThread;
         Thread ShowHomeThread;
         //Thread LogOutThread;
         public FormMain()
@@ -68,7 +68,7 @@ namespace APP2EFCore.Forms
 
         private void ShowCategoriesPage()
         {
-            using (AppDBContext db = new AppDBContext())
+            using (db = new AppDBContext())
             {
                 var categories = db.Categories.Select(c => new
                 {
@@ -87,6 +87,67 @@ namespace APP2EFCore.Forms
             }
         }
 
+        private void ShowSalesPage()
+        {
+            using (AppDBContext db = new AppDBContext())
+            {
+                var sales = db.Sales.Select(s => new
+                {
+                    s.Id,
+                    s.Product.Name,
+                    CategoryName = s.Product.Category.Name,
+                    s.ProductsCount,
+                    s.ProductPrice,
+                    s.ProductsTotalPrice,
+                    InvoiceId = s.Invoice.Id,
+                    s.Date,
+                    UserName = s.User.Name
+                }).ToList();
+                DGVSales.Invoke((MethodInvoker)delegate
+                {
+                    DGVSales.DataSource = sales;
+                    DGVSales.Columns[0].Visible = false;
+                    DGVSales.Columns[1].HeaderText = "اسم المنتج";
+                    DGVSales.Columns[2].HeaderText = "الصنف";
+                    DGVSales.Columns[3].HeaderText = "الكمية";
+                    DGVSales.Columns[4].HeaderText = "السعر";
+                    DGVSales.Columns[5].HeaderText = "السعر الاجمالي";
+                    DGVSales.Columns[6].HeaderText = "رقم الفاتورة";
+                    DGVSales.Columns[7].HeaderText = "تاريخ البيع";
+                    DGVSales.Columns[8].HeaderText = "اسم البائع";
+                });
+            }
+        }
+
+        private void ShowPurchasesPage()
+        {
+            using (AppDBContext db = new AppDBContext())
+            {
+                var purchases = db.Purchases.Select(p => new
+                {
+                    p.Id,
+                    ProductName = p.Product.Name,
+                    CategoryName = p.Product.Category.Name,
+                    p.ProductsCount,
+                    p.ProductPrice,
+                    p.ProductsTotalPrice,
+                    InvoiceId = p.Invoice.Id,
+                    p.Date
+                }).ToList();
+                DGVPurchases.Invoke((MethodInvoker)delegate
+                {
+                    DGVPurchases.DataSource = purchases;
+                    DGVPurchases.Columns[0].Visible = false;
+                    DGVPurchases.Columns[1].HeaderText = "اسم المنتج";
+                    DGVPurchases.Columns[2].HeaderText = "الصنف";
+                    DGVPurchases.Columns[3].HeaderText = "الكمية";
+                    DGVPurchases.Columns[4].HeaderText = "سعر المنتج";
+                    DGVPurchases.Columns[5].HeaderText = "السعر الاجمالي";
+                    DGVPurchases.Columns[6].HeaderText = "رقم الفاتورة";
+                    DGVPurchases.Columns[7].HeaderText = "تاريخ الشراء";
+                });
+            }
+        }
 
         private void timer1_Tick(object sender, EventArgs e)
         {
@@ -95,7 +156,25 @@ namespace APP2EFCore.Forms
 
         private void button5_Click(object sender, EventArgs e)
         {
+            if (DGVCategories.CurrentRow != null)
+            {
+                int id = Convert.ToInt32(DGVCategories.CurrentRow.Cells[0].Value);
+                using (db = new AppDBContext())
+                {
+                    Category category = db.Categories.FirstOrDefault(c => c.Id == id);
+                    if (MessageBox.Show("هل حقا تريد حذف صنف " + category.Name + " ?\n لا يمكن استرجاع البيانات , سيتم حذف جميع البيانات المرتبطة", "اجراء حذف", MessageBoxButtons.YesNo, MessageBoxIcon.Warning) == DialogResult.Yes)
+                    {
+                        db.Categories.Remove(category);
+                        db.SaveChanges();
+                        if (ShowCategoriesThread == null || ShowCategoriesThread.ThreadState == ThreadState.Stopped)
+                        {
+                            ShowCategoriesThread = new Thread(ShowCategoriesPage);
+                            ShowCategoriesThread.Start();
+                        }
+                    }
 
+                }
+            }
         }
 
         private void FormMain_Load(object sender, EventArgs e)
@@ -144,7 +223,7 @@ namespace APP2EFCore.Forms
                 pageState = PageState.categories;
                 this.Text = "الاصناف";
                 panelCategories.BringToFront();
-                if (ShowCategoriesThread == null || ShowCategoriesThread.ThreadState == ThreadState.Unstarted)
+                if (ShowCategoriesThread == null || ShowCategoriesThread.ThreadState == ThreadState.Stopped)
                 {
                     ShowCategoriesThread = new Thread(ShowCategoriesPage);
                     ShowCategoriesThread.Start();
@@ -164,6 +243,58 @@ namespace APP2EFCore.Forms
                 }
                 this.Text = "الصفحة الرئيسية";
             }
+        }
+
+        private void button5_Click_1(object sender, EventArgs e)
+        {
+            Categories.FormAddCategory formAddCategory = new Categories.FormAddCategory();
+            formAddCategory.ShowDialog();
+            if (ShowCategoriesThread == null || ShowCategoriesThread.ThreadState == ThreadState.Stopped)
+            {
+                ShowCategoriesThread = new Thread(ShowCategoriesPage);
+                ShowCategoriesThread.Start();
+            }
+        }
+
+        private void buttonSideSales_Click(object sender, EventArgs e)
+        {
+            if (pageState != PageState.sales)
+            {
+                pageState = PageState.sales;
+                this.Text = "المبيعات";
+                if (ShowSalesThread == null || ShowSalesThread.ThreadState == ThreadState.Stopped)
+                {
+                    ShowSalesThread = new Thread(ShowSalesPage);
+                    ShowSalesThread.Start();
+                }
+                panelSales.BringToFront();
+            }
+        }
+
+        private void buttonSidePurchases_Click(object sender, EventArgs e)
+        {
+            if (pageState != PageState.purchases)
+            {
+                panelPurchases.BringToFront();
+                pageState = PageState.purchases;
+                this.Text = "المشتريات";
+                if (ShowPurchasesThread == null || ShowPurchasesThread.ThreadState == ThreadState.Stopped)
+                {
+                    ShowPurchasesThread = new Thread(ShowPurchasesPage);
+                    ShowPurchasesThread.Start();
+                };
+            }
+        }
+
+        private void button2_Click(object sender, EventArgs e)
+        {
+            Purchases.FormAddPurchases formAddPurchases = new Purchases.FormAddPurchases();
+            formAddPurchases.ShowDialog();
+            if (ShowPurchasesThread == null || ShowPurchasesThread.ThreadState == ThreadState.Stopped)
+            {
+                ShowPurchasesThread = new Thread(ShowPurchasesPage);
+                ShowPurchasesThread.Start();
+            };
         }
     }
 }

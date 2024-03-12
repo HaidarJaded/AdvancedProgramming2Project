@@ -11,20 +11,28 @@
       "RelativeMoniker": "D:0:0:{40F597B2-C00C-4977-93D4-32D9EDA43D31}|APP2EFCore.csproj|solutionrelative:forms\\formmain.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}|Form"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{40F597B2-C00C-4977-93D4-32D9EDA43D31}|APP2EFCore.csproj|e:\\csprojects\\advancedprogrammigefcore\\enums\\pagestate.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{40F597B2-C00C-4977-93D4-32D9EDA43D31}|APP2EFCore.csproj|solutionrelative:enums\\pagestate.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{40F597B2-C00C-4977-93D4-32D9EDA43D31}|APP2EFCore.csproj|e:\\csprojects\\advancedprogrammigefcore\\app2efcore.csproj||{FA3CD31E-987B-443A-9B81-186104E8DAC1}|",
-      "RelativeMoniker": "D:0:0:{40F597B2-C00C-4977-93D4-32D9EDA43D31}|APP2EFCore.csproj|solutionrelative:app2efcore.csproj||{FA3CD31E-987B-443A-9B81-186104E8DAC1}|"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{40F597B2-C00C-4977-93D4-32D9EDA43D31}|APP2EFCore.csproj|e:\\csprojects\\advancedprogrammigefcore\\forms\\formlogin.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{40F597B2-C00C-4977-93D4-32D9EDA43D31}|APP2EFCore.csproj|solutionrelative:forms\\formlogin.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{40F597B2-C00C-4977-93D4-32D9EDA43D31}|APP2EFCore.csproj|e:\\csprojects\\advancedprogrammigefcore\\purchases\\formaddpurchases.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{40F597B2-C00C-4977-93D4-32D9EDA43D31}|APP2EFCore.csproj|solutionrelative:purchases\\formaddpurchases.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{40F597B2-C00C-4977-93D4-32D9EDA43D31}|APP2EFCore.csproj|e:\\csprojects\\advancedprogrammigefcore\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{40F597B2-C00C-4977-93D4-32D9EDA43D31}|APP2EFCore.csproj|solutionrelative:program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|E:\\CSProjects\\AdvancedProgrammigEFCore\\Migrations\\20240312195212_InitialCreate.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:Migrations\\20240312195212_InitialCreate.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{40F597B2-C00C-4977-93D4-32D9EDA43D31}|APP2EFCore.csproj|e:\\csprojects\\advancedprogrammigefcore\\appdbcontext.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{40F597B2-C00C-4977-93D4-32D9EDA43D31}|APP2EFCore.csproj|solutionrelative:appdbcontext.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{40F597B2-C00C-4977-93D4-32D9EDA43D31}|APP2EFCore.csproj|e:\\csprojects\\advancedprogrammigefcore\\models\\purchase.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{40F597B2-C00C-4977-93D4-32D9EDA43D31}|APP2EFCore.csproj|solutionrelative:models\\purchase.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{40F597B2-C00C-4977-93D4-32D9EDA43D31}|APP2EFCore.csproj|e:\\csprojects\\advancedprogrammigefcore\\purchases\\formaddpurchases.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}|Form",
+      "RelativeMoniker": "D:0:0:{40F597B2-C00C-4977-93D4-32D9EDA43D31}|APP2EFCore.csproj|solutionrelative:purchases\\formaddpurchases.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}|Form"
     }
   ],
   "DocumentGroupContainers": [
@@ -34,49 +42,45 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 4,
+          "SelectedChildIndex": 3,
           "Children": [
             {
-              "$type": "Bookmark",
-              "Name": "ST:128:0:{116d2292-e37d-41cd-a077-ebacac4c8cc4}"
+              "$type": "Document",
+              "DocumentIndex": 5,
+              "Title": "AppDBContext.cs",
+              "DocumentMoniker": "E:\\CSProjects\\AdvancedProgrammigEFCore\\AppDBContext.cs",
+              "RelativeDocumentMoniker": "AppDBContext.cs",
+              "ToolTip": "E:\\CSProjects\\AdvancedProgrammigEFCore\\AppDBContext.cs",
+              "RelativeToolTip": "AppDBContext.cs",
+              "ViewState": "AQIAAAcAAAAAAAAAAAAgwCcAAABdAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-03-12T19:47:24.768Z",
+              "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 2,
-              "Title": "PageState.cs",
-              "DocumentMoniker": "E:\\CSProjects\\AdvancedProgrammigEFCore\\Enums\\PageState.cs",
-              "RelativeDocumentMoniker": "Enums\\PageState.cs",
-              "ToolTip": "E:\\CSProjects\\AdvancedProgrammigEFCore\\Enums\\PageState.cs",
-              "RelativeToolTip": "Enums\\PageState.cs",
-              "ViewState": "AQIAAAAAAAAAAAAAAAAAABIAAAAQAAAA",
+              "DocumentIndex": 6,
+              "Title": "Purchase.cs",
+              "DocumentMoniker": "E:\\CSProjects\\AdvancedProgrammigEFCore\\Models\\Purchase.cs",
+              "RelativeDocumentMoniker": "Models\\Purchase.cs",
+              "ToolTip": "E:\\CSProjects\\AdvancedProgrammigEFCore\\Models\\Purchase.cs",
+              "RelativeToolTip": "Models\\Purchase.cs",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAcAAAAgAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-03-11T12:00:23.236Z",
+              "WhenOpened": "2024-03-12T18:04:35.904Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
               "DocumentIndex": 3,
-              "Title": "APP2EFCore",
-              "DocumentMoniker": "E:\\CSProjects\\AdvancedProgrammigEFCore\\APP2EFCore.csproj",
-              "RelativeDocumentMoniker": "APP2EFCore.csproj",
-              "ToolTip": "E:\\CSProjects\\AdvancedProgrammigEFCore\\APP2EFCore.csproj",
-              "RelativeToolTip": "APP2EFCore.csproj",
-              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000758|",
-              "WhenOpened": "2024-03-11T11:59:16.671Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 4,
-              "Title": "FormLogin.cs",
-              "DocumentMoniker": "E:\\CSProjects\\AdvancedProgrammigEFCore\\Forms\\FormLogin.cs",
-              "RelativeDocumentMoniker": "Forms\\FormLogin.cs",
-              "ToolTip": "E:\\CSProjects\\AdvancedProgrammigEFCore\\Forms\\FormLogin.cs",
-              "RelativeToolTip": "Forms\\FormLogin.cs",
-              "ViewState": "AQIAAAIAAAAAAAAAAAD4vxEAAAAYAAAA",
+              "Title": "Program.cs",
+              "DocumentMoniker": "E:\\CSProjects\\AdvancedProgrammigEFCore\\Program.cs",
+              "RelativeDocumentMoniker": "Program.cs",
+              "ToolTip": "E:\\CSProjects\\AdvancedProgrammigEFCore\\Program.cs",
+              "RelativeToolTip": "Program.cs",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAAA0AAAAqAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-03-11T11:24:59.451Z",
+              "WhenOpened": "2024-03-11T18:42:14.662Z",
               "EditorCaption": ""
             },
             {
@@ -87,9 +91,22 @@
               "RelativeDocumentMoniker": "Forms\\FormMain.cs",
               "ToolTip": "E:\\CSProjects\\AdvancedProgrammigEFCore\\Forms\\FormMain.cs",
               "RelativeToolTip": "Forms\\FormMain.cs",
-              "ViewState": "AQIAAHwAAAAAAAAAAAAhwEQAAAApAAAA",
+              "ViewState": "AQIAAFkAAAAAAAAAAAAIwOYAAAANAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2024-03-11T10:35:09.376Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "FormAddPurchases.cs",
+              "DocumentMoniker": "E:\\CSProjects\\AdvancedProgrammigEFCore\\Purchases\\FormAddPurchases.cs",
+              "RelativeDocumentMoniker": "Purchases\\FormAddPurchases.cs",
+              "ToolTip": "E:\\CSProjects\\AdvancedProgrammigEFCore\\Purchases\\FormAddPurchases.cs",
+              "RelativeToolTip": "Purchases\\FormAddPurchases.cs",
+              "ViewState": "AQIAAEcAAAAAAAAAAAAkwEEAAAAzAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-03-11T18:52:06.057Z",
               "EditorCaption": ""
             },
             {
@@ -106,16 +123,28 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 5,
-              "Title": "Program.cs",
-              "DocumentMoniker": "E:\\CSProjects\\AdvancedProgrammigEFCore\\Program.cs",
-              "RelativeDocumentMoniker": "Program.cs",
-              "ToolTip": "E:\\CSProjects\\AdvancedProgrammigEFCore\\Program.cs",
-              "RelativeToolTip": "Program.cs",
-              "ViewState": "AQIAAAAAAAAAAAAAAAAAAA0AAAAqAAAA",
+              "DocumentIndex": 4,
+              "Title": "20240312195212_InitialCreate.cs",
+              "DocumentMoniker": "E:\\CSProjects\\AdvancedProgrammigEFCore\\Migrations\\20240312195212_InitialCreate.cs",
+              "RelativeDocumentMoniker": "Migrations\\20240312195212_InitialCreate.cs",
+              "ToolTip": "E:\\CSProjects\\AdvancedProgrammigEFCore\\Migrations\\20240312195212_InitialCreate.cs",
+              "RelativeToolTip": "Migrations\\20240312195212_InitialCreate.cs",
+              "ViewState": "AQIAAG0AAAAAAAAAAAAgwAAAAAAAAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-03-10T17:54:42.699Z",
+              "WhenOpened": "2024-03-12T19:52:12.672Z",
               "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 7,
+              "Title": "FormAddPurchases.cs [Design]",
+              "DocumentMoniker": "E:\\CSProjects\\AdvancedProgrammigEFCore\\Purchases\\FormAddPurchases.cs",
+              "RelativeDocumentMoniker": "Purchases\\FormAddPurchases.cs",
+              "ToolTip": "E:\\CSProjects\\AdvancedProgrammigEFCore\\Purchases\\FormAddPurchases.cs [Design]",
+              "RelativeToolTip": "Purchases\\FormAddPurchases.cs [Design]",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-03-11T18:37:07.482Z",
+              "EditorCaption": " [Design]"
             }
           ]
         }

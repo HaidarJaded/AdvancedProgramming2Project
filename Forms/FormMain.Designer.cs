@@ -31,6 +31,12 @@
             components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FormMain));
             panelContainer = new Panel();
+            panelPurchases = new Panel();
+            DGVPurchases = new DataGridView();
+            flowLayoutPanel2 = new FlowLayoutPanel();
+            button2 = new Button();
+            panelSales = new Panel();
+            DGVSales = new DataGridView();
             panelCategories = new Panel();
             DGVCategories = new DataGridView();
             panelCategoriesButtom = new FlowLayoutPanel();
@@ -73,6 +79,11 @@
             buttonSideSettings = new Button();
             timer1 = new System.Windows.Forms.Timer(components);
             panelContainer.SuspendLayout();
+            panelPurchases.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)DGVPurchases).BeginInit();
+            flowLayoutPanel2.SuspendLayout();
+            panelSales.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)DGVSales).BeginInit();
             panelCategories.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)DGVCategories).BeginInit();
             panelCategoriesButtom.SuspendLayout();
@@ -90,6 +101,8 @@
             // 
             // panelContainer
             // 
+            panelContainer.Controls.Add(panelPurchases);
+            panelContainer.Controls.Add(panelSales);
             panelContainer.Controls.Add(panelCategories);
             panelContainer.Controls.Add(panelHome);
             panelContainer.Dock = DockStyle.Fill;
@@ -97,6 +110,81 @@
             panelContainer.Name = "panelContainer";
             panelContainer.Size = new Size(745, 520);
             panelContainer.TabIndex = 1;
+            // 
+            // panelPurchases
+            // 
+            panelPurchases.Controls.Add(DGVPurchases);
+            panelPurchases.Controls.Add(flowLayoutPanel2);
+            panelPurchases.Dock = DockStyle.Fill;
+            panelPurchases.Location = new Point(0, 0);
+            panelPurchases.Name = "panelPurchases";
+            panelPurchases.Size = new Size(745, 520);
+            panelPurchases.TabIndex = 3;
+            // 
+            // DGVPurchases
+            // 
+            DGVPurchases.AllowUserToAddRows = false;
+            DGVPurchases.AllowUserToDeleteRows = false;
+            DGVPurchases.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
+            DGVPurchases.BackgroundColor = Color.White;
+            DGVPurchases.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            DGVPurchases.Dock = DockStyle.Fill;
+            DGVPurchases.Location = new Point(0, 0);
+            DGVPurchases.Name = "DGVPurchases";
+            DGVPurchases.ReadOnly = true;
+            DGVPurchases.Size = new Size(745, 477);
+            DGVPurchases.TabIndex = 1;
+            // 
+            // flowLayoutPanel2
+            // 
+            flowLayoutPanel2.Controls.Add(button2);
+            flowLayoutPanel2.Dock = DockStyle.Bottom;
+            flowLayoutPanel2.Location = new Point(0, 477);
+            flowLayoutPanel2.Name = "flowLayoutPanel2";
+            flowLayoutPanel2.Size = new Size(745, 43);
+            flowLayoutPanel2.TabIndex = 0;
+            // 
+            // button2
+            // 
+            button2.AutoEllipsis = true;
+            button2.BackColor = Color.Transparent;
+            button2.FlatAppearance.BorderSize = 0;
+            button2.FlatAppearance.MouseDownBackColor = Color.FromArgb(45, 45, 45);
+            button2.FlatStyle = FlatStyle.Flat;
+            button2.Font = new Font("Microsoft Sans Serif", 10F);
+            button2.ForeColor = Color.Black;
+            button2.Image = (Image)resources.GetObject("button2.Image");
+            button2.ImageAlign = ContentAlignment.MiddleLeft;
+            button2.Location = new Point(610, 3);
+            button2.Name = "button2";
+            button2.Size = new Size(132, 35);
+            button2.TabIndex = 0;
+            button2.Text = "عملية شراء";
+            button2.UseVisualStyleBackColor = false;
+            button2.Click += button2_Click;
+            // 
+            // panelSales
+            // 
+            panelSales.Controls.Add(DGVSales);
+            panelSales.Dock = DockStyle.Fill;
+            panelSales.Location = new Point(0, 0);
+            panelSales.Name = "panelSales";
+            panelSales.Size = new Size(745, 520);
+            panelSales.TabIndex = 2;
+            // 
+            // DGVSales
+            // 
+            DGVSales.AllowUserToAddRows = false;
+            DGVSales.AllowUserToDeleteRows = false;
+            DGVSales.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
+            DGVSales.BackgroundColor = Color.White;
+            DGVSales.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            DGVSales.Dock = DockStyle.Fill;
+            DGVSales.Location = new Point(0, 0);
+            DGVSales.Name = "DGVSales";
+            DGVSales.ReadOnly = true;
+            DGVSales.Size = new Size(745, 520);
+            DGVSales.TabIndex = 1;
             // 
             // panelCategories
             // 
@@ -149,6 +237,7 @@
             button5.TabIndex = 0;
             button5.Text = "اضافة صنف";
             button5.UseVisualStyleBackColor = false;
+            button5.Click += button5_Click_1;
             // 
             // button1
             // 
@@ -532,6 +621,7 @@
             buttonSideSales.TabIndex = 0;
             buttonSideSales.Text = "المبيعات";
             buttonSideSales.UseVisualStyleBackColor = false;
+            buttonSideSales.Click += buttonSideSales_Click;
             // 
             // buttonSidePurchases
             // 
@@ -550,6 +640,7 @@
             buttonSidePurchases.TabIndex = 0;
             buttonSidePurchases.Text = "المشتريات";
             buttonSidePurchases.UseVisualStyleBackColor = false;
+            buttonSidePurchases.Click += buttonSidePurchases_Click;
             // 
             // buttonSideUsers
             // 
@@ -680,6 +771,11 @@
             Text = "الصفحة الرئيسية";
             Load += FormMain_Load;
             panelContainer.ResumeLayout(false);
+            panelPurchases.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)DGVPurchases).EndInit();
+            flowLayoutPanel2.ResumeLayout(false);
+            panelSales.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)DGVSales).EndInit();
             panelCategories.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)DGVCategories).EndInit();
             panelCategoriesButtom.ResumeLayout(false);
@@ -746,5 +842,11 @@
         private FlowLayoutPanel panelCategoriesButtom;
         private Button button1;
         private Button buttonSideHome;
+        private Panel panelSales;
+        private DataGridView DGVSales;
+        private Panel panelPurchases;
+        private DataGridView DGVPurchases;
+        private FlowLayoutPanel flowLayoutPanel2;
+        private Button button2;
     }
 }

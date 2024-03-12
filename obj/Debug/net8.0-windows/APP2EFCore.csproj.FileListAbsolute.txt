@@ -263,3 +263,5 @@ E:\CSProjects\AdvancedProgrammigEFCore\bin\Debug\net8.0-windows\APP2EFCore.dll.c
 E:\CSProjects\AdvancedProgrammigEFCore\obj\Debug\net8.0-windows\APP2EFCore.Forms.FormMain.resources
 E:\CSProjects\AdvancedProgrammigEFCore\obj\Debug\net8.0-windows\APP2EFCore.Forms.FormAddAdmin.resources
 E:\CSProjects\AdvancedProgrammigEFCore\obj\Debug\net8.0-windows\APP2EFCore.Properties.Resources.resources
+E:\CSProjects\AdvancedProgrammigEFCore\obj\Debug\net8.0-windows\APP2EFCore.Categories.FormAddCategory.resources
+E:\CSProjects\AdvancedProgrammigEFCore\obj\Debug\net8.0-windows\APP2EFCore.Purchases.FormAddPurchases.resources

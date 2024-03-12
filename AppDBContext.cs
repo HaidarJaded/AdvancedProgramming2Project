@@ -17,11 +17,11 @@ public class AppDBContext : DbContext
 
         modelBuilder.Entity<Product>().Property(p => p.Price).HasColumnType("decimal(10, 2)");
 
-        modelBuilder.Entity<Invoice>().Property(i => i.Date).HasDefaultValue(System.DateTime.Now);
+        modelBuilder.Entity<Invoice>().Property(i => i.Date).HasDefaultValueSql("getdate()");
 
         modelBuilder.Entity<Invoice>().Property(i => i.Total).HasColumnType("decimal(18, 2)");
 
-        modelBuilder.Entity<Sale>().Property(s => s.Date).HasDefaultValue(System.DateTime.Now);
+        modelBuilder.Entity<Sale>().Property(s => s.Date).HasDefaultValueSql("getdate()");
 
         modelBuilder.Entity<Sale>().Property(s => s.CheckReport).HasDefaultValue(0);
 
@@ -37,7 +37,7 @@ public class AppDBContext : DbContext
 
         modelBuilder.Entity<Purchase>().Property(p => p.ProductsTotalPrice).HasComputedColumnSql("[ProductsCount]*[ProductPrice]");
 
-        modelBuilder.Entity<Purchase>().Property(p => p.Date).HasDefaultValue(System.DateTime.Now);
+        modelBuilder.Entity<Purchase>().Property(p => p.Date).HasDefaultValueSql("getdate()");
 
         modelBuilder.Entity<Purchase>().Property(p => p.ProductPrice).HasColumnType("decimal(18, 2)");
 
