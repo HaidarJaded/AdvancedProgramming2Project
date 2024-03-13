@@ -1,5 +1,6 @@
 ﻿using APP2EFCore.Enums;
 using APP2EFCore.Properties;
+using Microsoft.EntityFrameworkCore;
 using System.Data;
 
 namespace APP2EFCore.Forms
@@ -13,9 +14,9 @@ namespace APP2EFCore.Forms
         //Thread ShowDailyReportThread;
         Thread ShowCategoriesThread;
         Thread ShowPurchasesThread;
-        //Thread ShowproducersThread;
+        Thread ShowProductsThread;
         //Thread ShowinvoicesThread;
-        //Thread ShowVendorsThread;
+        Thread ShowUsersThread;
         Thread ShowSalesThread;
         Thread ShowHomeThread;
         //Thread LogOutThread;
@@ -145,6 +146,50 @@ namespace APP2EFCore.Forms
                     DGVPurchases.Columns[5].HeaderText = "السعر الاجمالي";
                     DGVPurchases.Columns[6].HeaderText = "رقم الفاتورة";
                     DGVPurchases.Columns[7].HeaderText = "تاريخ الشراء";
+                });
+            }
+        }
+
+        private void ShowUsersPage()
+        {
+            using (db = new AppDBContext())
+            {
+                var users = db.Users.Where(u => u.Type == UserTypes.casher).Select(u => new
+                {
+                    u.Id,
+                    u.Name,
+                    u.Email
+                }).ToList();
+                DGVUsers.Invoke((MethodInvoker)delegate
+              {
+                  DGVUsers.DataSource = users;
+                  DGVUsers.Columns[0].Visible = false;
+                  DGVUsers.Columns[1].HeaderText = "اسم البائع";
+                  DGVUsers.Columns[2].HeaderText = "البريد الالكتروني";
+              });
+            }
+        }
+
+        private void ShowProductsPage()
+        {
+            using (db = new AppDBContext())
+            {
+                var products = db.Products.Select(p => new
+                {
+                    p.Id,
+                    p.Name,
+                    CategoryName = p.Category.Name,
+                    p.Price,
+                    p.Count,
+                }).ToList();
+                DGVProducts.Invoke((MethodInvoker)delegate
+                {
+                    DGVProducts.DataSource = products;
+                    DGVProducts.Columns[0].Visible = false;
+                    DGVProducts.Columns[1].HeaderText = "اسم المنتج";
+                    DGVProducts.Columns[2].HeaderText = "الصنف";
+                    DGVProducts.Columns[3].HeaderText = "السعر";
+                    DGVProducts.Columns[4].HeaderText = "الكمية";
                 });
             }
         }
@@ -295,6 +340,126 @@ namespace APP2EFCore.Forms
                 ShowPurchasesThread = new Thread(ShowPurchasesPage);
                 ShowPurchasesThread.Start();
             };
+        }
+
+        private void button3_Click(object sender, EventArgs e)
+        {
+            if (DGVCategories.CurrentRow != null)
+            {
+                using (db = new AppDBContext())
+                {
+                    int categoryId = Convert.ToInt32(DGVCategories.CurrentRow.Cells[0].Value);
+                    Category category = db.Categories.Include(c => c.Products).FirstOrDefault(c => c.Id == categoryId);
+                    Categories.FormShowProducts formShowProducts = new Categories.FormShowProducts(category);
+                    formShowProducts.ShowDialog();
+                }
+            }
+
+        }
+
+        private void buttonSideProducts_Click(object sender, EventArgs e)
+        {
+            if (pageState != PageState.products)
+            {
+                panelProducts.BringToFront();
+                pageState = PageState.products;
+                this.Text = "المنتجات";
+                if (ShowProductsThread == null || ShowProductsThread.ThreadState == ThreadState.Stopped)
+                {
+                    ShowProductsThread = new Thread(ShowProductsPage);
+                    ShowProductsThread.Start();
+                };
+            }
+        }
+
+        private void buttonSideUsers_Click(object sender, EventArgs e)
+        {
+            if (pageState != PageState.user)
+            {
+                panelUsers.BringToFront();
+                pageState = PageState.user;
+                this.Text = "البائعين";
+                if (ShowUsersThread == null || ShowUsersThread.ThreadState == ThreadState.Stopped)
+                {
+                    ShowUsersThread = new Thread(ShowUsersPage);
+                    ShowUsersThread.Start();
+                };
+            }
+        }
+
+        private void button4_Click(object sender, EventArgs e)
+        {
+            Users.FormAddUser formAddUser = new Users.FormAddUser();
+            formAddUser.ShowDialog();
+            if (ShowUsersThread == null || ShowUsersThread.ThreadState == ThreadState.Stopped)
+            {
+                ShowUsersThread = new Thread(ShowUsersPage);
+                ShowUsersThread.Start();
+            };
+        }
+
+        private void button7_Click(object sender, EventArgs e)
+        {
+            if (DGVUsers.CurrentRow != null)
+            {
+                int userId = Convert.ToInt32(DGVUsers.CurrentRow.Cells[0].Value);
+                using (db = new AppDBContext())
+                {
+                    User user = db.Users.Find(userId);
+
+                    if (MessageBox.Show("هل حقا تريد حذف البائع " + user.Name + " لا يمكن استرجاع البيانات, ", "اجراء حذف", MessageBoxButtons.YesNo, MessageBoxIcon.Warning) == DialogResult.Yes)
+                    {
+                        db.Users.Remove(user);
+                        db.SaveChanges();
+                        if (ShowUsersThread == null || ShowUsersThread.ThreadState == ThreadState.Stopped)
+                        {
+                            ShowUsersThread = new Thread(ShowUsersPage);
+                            ShowUsersThread.Start();
+                        };
+                    }
+
+                }
+            }
+        }
+
+        private void button8_Click(object sender, EventArgs e)
+        {
+            if (DGVUsers.CurrentRow != null)
+            {
+                User user;
+                using (db = new AppDBContext())
+                {
+                    int userId = Convert.ToInt32(DGVUsers.CurrentRow.Cells[0].Value);
+                    user = db.Users.Find(userId);
+                    Users.FormEditUser formEditUser = new Users.FormEditUser(user, db);
+                    formEditUser.ShowDialog();
+                }
+                if (ShowUsersThread == null || ShowUsersThread.ThreadState == ThreadState.Stopped)
+                {
+                    ShowUsersThread = new Thread(ShowUsersPage);
+                    ShowUsersThread.Start();
+                };
+            }
+        }
+
+        private void button6_Click(object sender, EventArgs e)
+        {
+            if (DGVProducts.CurrentRow != null)
+            {
+                using(db=new AppDBContext())
+                {
+                    int productId = Convert.ToInt32(DGVProducts.CurrentRow.Cells[0].Value);
+                    Product product = db.Products.Include(p=>p.Category).Where(p=>p.Id==productId).First();
+                    Products.FormEditProduct formEditProduct = new Products.FormEditProduct(product);
+                    formEditProduct.ShowDialog();
+
+                }
+                if (ShowProductsThread == null || ShowProductsThread.ThreadState == ThreadState.Stopped)
+                {
+                    ShowProductsThread = new Thread(ShowProductsPage);
+                    ShowProductsThread.Start();
+                };
+            }
         }
     }
 }

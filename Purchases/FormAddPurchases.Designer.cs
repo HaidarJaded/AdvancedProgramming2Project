@@ -87,6 +87,7 @@
             button4.Name = "button4";
             button4.Size = new Size(75, 23);
             button4.TabIndex = 5;
+            button4.TabStop = false;
             button4.Text = "حفظ واغلاق";
             button4.UseVisualStyleBackColor = true;
             button4.Click += button4_Click;
@@ -97,6 +98,7 @@
             button3.Name = "button3";
             button3.Size = new Size(75, 23);
             button3.TabIndex = 5;
+            button3.TabStop = false;
             button3.Text = "حفظ";
             button3.UseVisualStyleBackColor = true;
             button3.Click += button3_Click;
@@ -107,6 +109,7 @@
             button2.Name = "button2";
             button2.Size = new Size(75, 23);
             button2.TabIndex = 5;
+            button2.TabStop = false;
             button2.Text = "حذف";
             button2.UseVisualStyleBackColor = true;
             button2.Click += button2_Click;
@@ -134,6 +137,7 @@
             // 
             // comboBoxProductCategory
             // 
+            comboBoxProductCategory.DropDownStyle = ComboBoxStyle.DropDownList;
             comboBoxProductCategory.FormattingEnabled = true;
             comboBoxProductCategory.Location = new Point(360, 18);
             comboBoxProductCategory.Name = "comboBoxProductCategory";

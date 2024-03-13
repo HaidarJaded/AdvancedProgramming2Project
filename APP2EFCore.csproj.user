@@ -4,6 +4,9 @@
     <Compile Update="Categories\FormAddCategory.cs">
       <SubType>Form</SubType>
     </Compile>
+    <Compile Update="Categories\FormShowProducts.cs">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Update="Forms\FormAddAdmin.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -13,7 +16,16 @@
     <Compile Update="Forms\FormMain.cs">
       <SubType>Form</SubType>
     </Compile>
+    <Compile Update="Products\FormEditProduct.cs">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Update="Purchases\FormAddPurchases.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="Users\FormAddUser.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="Users\FormEditUser.cs">
       <SubType>Form</SubType>
     </Compile>
   </ItemGroup>
