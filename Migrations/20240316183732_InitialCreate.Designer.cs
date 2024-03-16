@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace APP2EFCore.Migrations
 {
     [DbContext(typeof(AppDBContext))]
-    [Migration("20240312195212_InitialCreate")]
+    [Migration("20240316183732_InitialCreate")]
     partial class InitialCreate
     {
         /// <inheritdoc />
@@ -149,11 +149,6 @@ namespace APP2EFCore.Migrations
                         .HasColumnType("int");
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<int>("CheckReport")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasDefaultValue(0);
 
                     b.Property<DateTime>("Date")
                         .ValueGeneratedOnAdd()

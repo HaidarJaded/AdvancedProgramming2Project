@@ -80,8 +80,8 @@ namespace APP2EFCore.Purchases
                         Product = product,
                     };
                     db.Purchases.Add(purchase);
-                    invoice.Total = productCount * productPrice;
                 }
+                invoice.Total = decimal.Parse(labelTotalInvoice.Text);
                 db.SaveChanges();
             }
             if (state == "close")

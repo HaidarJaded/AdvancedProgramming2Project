@@ -23,8 +23,6 @@ public class AppDBContext : DbContext
 
         modelBuilder.Entity<Sale>().Property(s => s.Date).HasDefaultValueSql("getdate()");
 
-        modelBuilder.Entity<Sale>().Property(s => s.CheckReport).HasDefaultValue(0);
-
         modelBuilder.Entity<Sale>().Property(s => s.ProductsTotalPrice).HasComputedColumnSql("[ProductsCount]*[ProductPrice]");
 
         modelBuilder.Entity<Sale>().Property(s => s.ProductPrice).HasColumnType("decimal(10, 2)");

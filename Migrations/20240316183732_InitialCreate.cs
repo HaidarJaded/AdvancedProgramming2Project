@@ -118,7 +118,6 @@ namespace APP2EFCore.Migrations
                     ProductPrice = table.Column<decimal>(type: "decimal(10,2)", nullable: false),
                     ProductsTotalPrice = table.Column<decimal>(type: "decimal(18,2)", nullable: false, computedColumnSql: "[ProductsCount]*[ProductPrice]"),
                     Date = table.Column<DateTime>(type: "datetime2", nullable: false, defaultValueSql: "getdate()"),
-                    CheckReport = table.Column<int>(type: "int", nullable: false, defaultValue: 0),
                     profitRatio = table.Column<int>(type: "int", nullable: false),
                     InvoiceId = table.Column<int>(type: "int", nullable: false),
                     ProductId = table.Column<int>(type: "int", nullable: false),

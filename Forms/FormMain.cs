@@ -9,17 +9,15 @@ namespace APP2EFCore.Forms
     {
         PageState pageState;
         AppDBContext db;
-        //Thread ShowAllMonthlyReportsThread;
-        //Thread ShowMonthlyReportsThread;
-        //Thread ShowDailyReportThread;
+        Thread ShowReportsThread;
+        Thread GetUsersThread;
         Thread ShowCategoriesThread;
         Thread ShowPurchasesThread;
         Thread ShowProductsThread;
-        //Thread ShowinvoicesThread;
+        Thread ShowinvoicesThread;
         Thread ShowUsersThread;
         Thread ShowSalesThread;
         Thread ShowHomeThread;
-        //Thread LogOutThread;
         public FormMain()
         {
             InitializeComponent();
@@ -59,6 +57,7 @@ namespace APP2EFCore.Forms
                 UpdateLabel(labelHomeUsersCount, db.Users.Where(x => x.Type == UserTypes.casher).Count());
             }
         }
+
         private void UpdateLabel(Label label, int value, string unit = "")
         {
             label.Invoke((MethodInvoker)delegate
@@ -194,6 +193,102 @@ namespace APP2EFCore.Forms
             }
         }
 
+        private void GetUsersName()
+        {
+            using (db = new AppDBContext())
+            {
+                var users = db.Users.Where(u => u.Type == UserTypes.casher).Select(u => new
+                {
+                    u.Id,
+                    u.Name,
+                }).ToList();
+                comboBoxUserName.Invoke((MethodInvoker)delegate
+                {
+                    comboBoxUserName.DataSource = users;
+                    comboBoxUserName.DisplayMember = "Name";
+                    comboBoxUserName.ValueMember = "Id";
+                });
+            }
+        }
+
+        private void ShowReportPage()
+        {
+            DateTime startDate = dateTimePickerFrom.Value.Date;
+            DateTime endDate = dateTimePickerTo.Value.Date;
+
+            try
+            {
+                using (AppDBContext db = new AppDBContext())
+                {
+                    var salesBetweenDates = db.Sales
+                        .Where(s => s.Date.Date >= startDate && s.Date.Date <= endDate);
+
+                    if (!checkBoxAllUsers.Checked)
+                    {
+                        int userId = 0;
+                        comboBoxUserName.Invoke((MethodInvoker)delegate
+                        {
+                            userId = Convert.ToInt32(comboBoxUserName.SelectedValue);
+                        });
+
+                        salesBetweenDates = salesBetweenDates.Where(s => s.User.Id == userId);
+                    }
+
+                    var reportData = salesBetweenDates.Select(s => new
+                    {
+                        s.Id,
+                        ProductName = s.Product.Name,
+                        CategoryName = s.Product.Category.Name,
+                        s.ProductsCount,
+                        s.ProductPrice,
+                        s.ProductsTotalPrice,
+                        InvoiceId = s.Invoice.Id,
+                        s.Date,
+                        UserName = s.User.Name
+                    }).ToList();
+
+                    DGVReports.Invoke((MethodInvoker)delegate
+                    {
+                        DGVReports.DataSource = reportData;
+                        DGVReports.Columns[0].Visible = false;
+                        DGVReports.Columns[1].HeaderText = "اسم المنتج";
+                        DGVReports.Columns[2].HeaderText = "الصنف";
+                        DGVReports.Columns[3].HeaderText = "الكمية";
+                        DGVReports.Columns[4].HeaderText = "السعر";
+                        DGVReports.Columns[5].HeaderText = "السعر الاجمالي";
+                        DGVReports.Columns[6].HeaderText = "رقم الفاتورة";
+                        DGVReports.Columns[7].HeaderText = "تاريخ البيع";
+                        DGVReports.Columns[8].HeaderText = "اسم البائع";
+                        textBoxTotalSalesPrice.Text = reportData.Sum(s => s.ProductsTotalPrice).ToString();
+                    });
+                }
+            }
+            catch (Exception ex)
+            {
+                // Handle and log any exceptions that occur
+                MessageBox.Show($"An error occurred: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
+        private void ShowInvoicesPage()
+        {
+            using (db = new AppDBContext())
+            {
+                var invoices = db.Invoices.Select(i => new
+                {
+                    i.Id,
+                    i.Type,
+                    i.Total,
+                    i.Date
+                }).ToList();
+                DGVInvoices.Invoke((MethodInvoker)delegate
+                {
+                    DGVInvoices.DataSource = invoices;
+                });
+            }
+        }
+
+
         private void timer1_Tick(object sender, EventArgs e)
         {
             labelClock.Text = DateTime.Now.ToString("hh:mm:ss tt");
@@ -244,6 +339,9 @@ namespace APP2EFCore.Forms
                 //Category page
                 panelCategoriesButtom.Visible = false;
 
+                //Sales page
+                panelSalesButtom.Visible = false;
+
                 //Settings page
                 //panel_settings_profitRatio.Visible = false;
 
@@ -254,11 +352,12 @@ namespace APP2EFCore.Forms
                 buttonHomeSale.Visible = false;
 
             }
-            if (pageState != PageState.home)
-            {
-                ShowHomePage();
-            }
-            labelUserName.Text = Settings.Default.CurrentUserName;
+
+            ShowHomePage();
+            string userName = Settings.Default.CurrentUserName;
+            labelUserName.Text = string.IsNullOrWhiteSpace(userName) ? "UserName" : userName;
+            dateTimePickerTo.MaxDate = DateTime.Now;
+            dateTimePickerFrom.MaxDate = dateTimePickerTo.Value;
         }
 
         private void buttonSideCategories_Click(object sender, EventArgs e)
@@ -446,13 +545,12 @@ namespace APP2EFCore.Forms
         {
             if (DGVProducts.CurrentRow != null)
             {
-                using(db=new AppDBContext())
+                using (db = new AppDBContext())
                 {
                     int productId = Convert.ToInt32(DGVProducts.CurrentRow.Cells[0].Value);
-                    Product product = db.Products.Include(p=>p.Category).Where(p=>p.Id==productId).First();
+                    Product product = db.Products.Include(p => p.Category).Where(p => p.Id == productId).First();
                     Products.FormEditProduct formEditProduct = new Products.FormEditProduct(product);
                     formEditProduct.ShowDialog();
-
                 }
                 if (ShowProductsThread == null || ShowProductsThread.ThreadState == ThreadState.Stopped)
                 {
@@ -460,6 +558,111 @@ namespace APP2EFCore.Forms
                     ShowProductsThread.Start();
                 };
             }
+        }
+
+        private void buttonSideReports_Click(object sender, EventArgs e)
+        {
+            if (pageState != PageState.reports)
+            {
+                pageState = PageState.reports;
+                this.Text = "التقارير";
+                if (GetUsersThread == null || GetUsersThread.ThreadState == ThreadState.Stopped)
+                {
+                    GetUsersThread = new Thread(GetUsersName);
+                    GetUsersThread.Start();
+                }
+                panelReports.BringToFront();
+            }
+        }
+
+        private void comboBoxUserName_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (ShowReportsThread == null || ShowReportsThread.ThreadState == ThreadState.Stopped)
+            {
+                ShowReportsThread = new Thread(ShowReportPage);
+                ShowReportsThread.Start();
+            }
+        }
+
+        private void dateTimePickerFrom_ValueChanged(object sender, EventArgs e)
+        {
+            if (ShowReportsThread == null || ShowReportsThread.ThreadState == ThreadState.Stopped)
+            {
+                ShowReportsThread = new Thread(ShowReportPage);
+                ShowReportsThread.Start();
+            }
+        }
+
+        private void dateTimePickerTo_ValueChanged(object sender, EventArgs e)
+        {
+            if (ShowReportsThread == null || ShowReportsThread.ThreadState == ThreadState.Stopped)
+            {
+                ShowReportsThread = new Thread(ShowReportPage);
+                ShowReportsThread.Start();
+            }
+            dateTimePickerFrom.MaxDate = dateTimePickerTo.Value;
+        }
+
+        private void checkBoxAllUsers_CheckedChanged(object sender, EventArgs e)
+        {
+            if (ShowReportsThread == null || ShowReportsThread.ThreadState == ThreadState.Stopped)
+            {
+                ShowReportsThread = new Thread(ShowReportPage);
+                ShowReportsThread.Start();
+            }
+        }
+
+        private void buttonSideInvoices_Click(object sender, EventArgs e)
+        {
+            if (pageState != PageState.invoices)
+            {
+                panelInvoices.BringToFront();
+                pageState = PageState.invoices;
+                this.Text = "الفواتير";
+                if (ShowinvoicesThread == null || ShowinvoicesThread.ThreadState == ThreadState.Stopped)
+                {
+                    ShowinvoicesThread = new Thread(ShowInvoicesPage);
+                    ShowinvoicesThread.Start();
+                }
+            }
+        }
+
+        private void button9_Click(object sender, EventArgs e)
+        {
+            if (DGVInvoices.CurrentRow != null)
+            {
+                int invoiceId = Convert.ToInt32(DGVInvoices.CurrentRow.Cells[0].Value);
+                Invoices.FormInvoiceInfo formInvoiceInfo = new Invoices.FormInvoiceInfo(invoiceId);
+                formInvoiceInfo.ShowDialog();
+            }
+        }
+
+        private void buttonHomeCategory_Click(object sender, EventArgs e)
+        {
+            Categories.FormAddCategory formAddCategory = new Categories.FormAddCategory();
+            formAddCategory.ShowDialog();
+            ShowHomePage();
+        }
+
+        private void buttonHomeUser_Click(object sender, EventArgs e)
+        {
+            Users.FormAddUser formAddUser = new Users.FormAddUser();
+            formAddUser.ShowDialog();
+            ShowHomePage();
+        }
+
+        private void buttonHomePurchase_Click(object sender, EventArgs e)
+        {
+            Purchases.FormAddPurchases formAddPurchases = new Purchases.FormAddPurchases();
+            formAddPurchases.ShowDialog();
+            ShowHomePage();
+        }
+
+        private void buttonHomeSale_Click(object sender, EventArgs e)
+        {
+            Sales.FormAddSales formAddSales = new Sales.FormAddSales();
+            formAddSales.ShowDialog();
+            ShowHomePage();
         }
     }
 }
