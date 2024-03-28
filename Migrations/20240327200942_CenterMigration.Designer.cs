@@ -4,6 +4,7 @@ using APP2EFCore;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace APP2EFCore.Migrations
 {
     [DbContext(typeof(AppDBContext))]
-    partial class AppDBContextModelSnapshot : ModelSnapshot
+    [Migration("20240327200942_CenterMigration")]
+    partial class CenterMigration
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -84,13 +87,6 @@ namespace APP2EFCore.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Centers");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 1,
-                            ProfitRatio = 0m
-                        });
                 });
 
             modelBuilder.Entity("APP2EFCore.Product", b =>

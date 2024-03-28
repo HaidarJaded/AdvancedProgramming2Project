@@ -9,6 +9,7 @@ namespace APP2EFCore.Forms
     {
         PageState pageState;
         AppDBContext db;
+        FormLogin formLogin;
         Thread ShowReportsThread;
         Thread GetUsersThread;
         Thread ShowCategoriesThread;
@@ -18,47 +19,32 @@ namespace APP2EFCore.Forms
         Thread ShowUsersThread;
         Thread ShowSalesThread;
         Thread ShowHomeThread;
-        public FormMain()
+        public FormMain(FormLogin formLogin)
         {
             InitializeComponent();
-            Settings.Default.CurrentUserType = UserTypes.admin.ToString();
             db = new AppDBContext();
+            this.formLogin = formLogin;
         }
         private void ShowHomePage()
         {
+            progressBarWait.Invoke((MethodInvoker)delegate { progressBarWait.Visible = true; });
             pageState = PageState.home;
             using (db = new AppDBContext())
             {
-                int sumPurchasesPriceMonth;
-                int sumSalesPriceMonth;
-                try
-                {
-                    sumPurchasesPriceMonth = Convert.ToInt32(db.Purchases.Where(x => x.Date.Month == DateTime.Now.Month).Sum(x => x.ProductsTotalPrice));
-                }
-                catch
-                {
-                    sumPurchasesPriceMonth = 0;
-                }
+                decimal sumPurchasesPriceMonth = db.Purchases.Where(x => x.Date.Month == DateTime.Now.Month).Sum(x => x.ProductsTotalPrice);
 
-                try
-                {
-                    sumSalesPriceMonth = Convert.ToInt32(db.Sales.Where(x => x.Date.Month == DateTime.Now.Month).Sum(x => x.ProductsTotalPrice));
-                }
-                catch
-                {
-                    sumSalesPriceMonth = 0;
-                }
+                decimal sumSalesPriceMonth = db.Sales.Where(x => x.Date.Month == DateTime.Now.Month).Sum(x => x.ProductsTotalPrice);
 
                 UpdateLabel(labelHomePurchasesPrice, sumPurchasesPriceMonth, "ل.س");
                 UpdateLabel(labelHomeSalesPrice, sumSalesPriceMonth, "ل.س");
-
                 UpdateLabel(labelHomeCategoriesCount, db.Categories.Count());
                 UpdateLabel(labelHomeProductsCount, db.Products.Count());
                 UpdateLabel(labelHomeUsersCount, db.Users.Where(x => x.Type == UserTypes.casher).Count());
             }
+            progressBarWait.Invoke((MethodInvoker)delegate { progressBarWait.Visible = false; });
         }
 
-        private void UpdateLabel(Label label, int value, string unit = "")
+        private void UpdateLabel(Label label, decimal value, string unit = "")
         {
             label.Invoke((MethodInvoker)delegate
             {
@@ -68,6 +54,7 @@ namespace APP2EFCore.Forms
 
         private void ShowCategoriesPage()
         {
+            progressBarWait.Invoke((MethodInvoker)delegate { progressBarWait.Visible = true; });
             using (db = new AppDBContext())
             {
                 var categories = db.Categories.Select(c => new
@@ -85,10 +72,12 @@ namespace APP2EFCore.Forms
                     DGVCategories.Columns["ProductsCount"].HeaderText = "عدد المنتجات";
                 });
             }
+            progressBarWait.Invoke((MethodInvoker)delegate { progressBarWait.Visible = false; });
         }
 
         private void ShowSalesPage()
         {
+            progressBarWait.Invoke((MethodInvoker)delegate { progressBarWait.Visible = true; });
             using (AppDBContext db = new AppDBContext())
             {
                 var sales = db.Sales.Select(s => new
@@ -117,10 +106,13 @@ namespace APP2EFCore.Forms
                     DGVSales.Columns[8].HeaderText = "اسم البائع";
                 });
             }
+            progressBarWait.Invoke((MethodInvoker)delegate { progressBarWait.Visible = false; });
         }
 
         private void ShowPurchasesPage()
         {
+            progressBarWait.Invoke((MethodInvoker)delegate { progressBarWait.Visible = true; });
+
             using (AppDBContext db = new AppDBContext())
             {
                 var purchases = db.Purchases.Select(p => new
@@ -147,10 +139,13 @@ namespace APP2EFCore.Forms
                     DGVPurchases.Columns[7].HeaderText = "تاريخ الشراء";
                 });
             }
+            progressBarWait.Invoke((MethodInvoker)delegate { progressBarWait.Visible = false; });
         }
 
         private void ShowUsersPage()
         {
+            progressBarWait.Invoke((MethodInvoker)delegate { progressBarWait.Visible = true; });
+
             using (db = new AppDBContext())
             {
                 var users = db.Users.Where(u => u.Type == UserTypes.casher).Select(u => new
@@ -167,10 +162,14 @@ namespace APP2EFCore.Forms
                   DGVUsers.Columns[2].HeaderText = "البريد الالكتروني";
               });
             }
+            progressBarWait.Invoke((MethodInvoker)delegate { progressBarWait.Visible = false; });
+
         }
 
         private void ShowProductsPage()
         {
+            progressBarWait.Invoke((MethodInvoker)delegate { progressBarWait.Visible = true; });
+
             using (db = new AppDBContext())
             {
                 var products = db.Products.Select(p => new
@@ -191,10 +190,14 @@ namespace APP2EFCore.Forms
                     DGVProducts.Columns[4].HeaderText = "الكمية";
                 });
             }
+            progressBarWait.Invoke((MethodInvoker)delegate { progressBarWait.Visible = false; });
+
         }
 
         private void GetUsersName()
         {
+            progressBarWait.Invoke((MethodInvoker)delegate { progressBarWait.Visible = true; });
+
             using (db = new AppDBContext())
             {
                 var users = db.Users.Where(u => u.Type == UserTypes.casher).Select(u => new
@@ -209,10 +212,14 @@ namespace APP2EFCore.Forms
                     comboBoxUserName.ValueMember = "Id";
                 });
             }
+            progressBarWait.Invoke((MethodInvoker)delegate { progressBarWait.Visible = false; });
+
         }
 
         private void ShowReportPage()
         {
+            progressBarWait.Invoke((MethodInvoker)delegate { progressBarWait.Invoke((MethodInvoker)delegate { progressBarWait.Visible = true; }); });
+
             DateTime startDate = dateTimePickerFrom.Value.Date;
             DateTime endDate = dateTimePickerTo.Value.Date;
 
@@ -265,13 +272,16 @@ namespace APP2EFCore.Forms
             }
             catch (Exception ex)
             {
-                // Handle and log any exceptions that occur
                 MessageBox.Show($"An error occurred: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
+            progressBarWait.Invoke((MethodInvoker)delegate { progressBarWait.Visible = false; });
+
         }
 
         private void ShowInvoicesPage()
         {
+            progressBarWait.Invoke((MethodInvoker)delegate { progressBarWait.Invoke((MethodInvoker)delegate { progressBarWait.Visible = true; }); });
+
             using (db = new AppDBContext())
             {
                 var invoices = db.Invoices.Select(i => new
@@ -286,6 +296,8 @@ namespace APP2EFCore.Forms
                     DGVInvoices.DataSource = invoices;
                 });
             }
+            progressBarWait.Invoke((MethodInvoker)delegate { progressBarWait.Visible = false; });
+
         }
 
 
@@ -301,7 +313,8 @@ namespace APP2EFCore.Forms
                 int id = Convert.ToInt32(DGVCategories.CurrentRow.Cells[0].Value);
                 using (db = new AppDBContext())
                 {
-                    Category category = db.Categories.FirstOrDefault(c => c.Id == id);
+                    Category? category = db.Categories.FirstOrDefault(c => c.Id == id);
+                    if (category == null) { return; }
                     if (MessageBox.Show("هل حقا تريد حذف صنف " + category.Name + " ?\n لا يمكن استرجاع البيانات , سيتم حذف جميع البيانات المرتبطة", "اجراء حذف", MessageBoxButtons.YesNo, MessageBoxIcon.Warning) == DialogResult.Yes)
                     {
                         db.Categories.Remove(category);
@@ -343,7 +356,7 @@ namespace APP2EFCore.Forms
                 panelSalesButtom.Visible = false;
 
                 //Settings page
-                //panel_settings_profitRatio.Visible = false;
+                panelSettingsProfitRatio.Visible = false;
 
             }
             else
@@ -448,7 +461,8 @@ namespace APP2EFCore.Forms
                 using (db = new AppDBContext())
                 {
                     int categoryId = Convert.ToInt32(DGVCategories.CurrentRow.Cells[0].Value);
-                    Category category = db.Categories.Include(c => c.Products).FirstOrDefault(c => c.Id == categoryId);
+                    Category? category = db.Categories.Include(c => c.Products).FirstOrDefault(c => c.Id == categoryId);
+                    if (category == null) { return; }
                     Categories.FormShowProducts formShowProducts = new Categories.FormShowProducts(category);
                     formShowProducts.ShowDialog();
                 }
@@ -504,8 +518,8 @@ namespace APP2EFCore.Forms
                 int userId = Convert.ToInt32(DGVUsers.CurrentRow.Cells[0].Value);
                 using (db = new AppDBContext())
                 {
-                    User user = db.Users.Find(userId);
-
+                    User? user = db.Users.Find(userId);
+                    if (user == null) return;
                     if (MessageBox.Show("هل حقا تريد حذف البائع " + user.Name + " لا يمكن استرجاع البيانات, ", "اجراء حذف", MessageBoxButtons.YesNo, MessageBoxIcon.Warning) == DialogResult.Yes)
                     {
                         db.Users.Remove(user);
@@ -525,11 +539,12 @@ namespace APP2EFCore.Forms
         {
             if (DGVUsers.CurrentRow != null)
             {
-                User user;
+
                 using (db = new AppDBContext())
                 {
                     int userId = Convert.ToInt32(DGVUsers.CurrentRow.Cells[0].Value);
-                    user = db.Users.Find(userId);
+                    User? user = db.Users.Find(userId);
+                    if (user == null) return;
                     Users.FormEditUser formEditUser = new Users.FormEditUser(user, db);
                     formEditUser.ShowDialog();
                 }
@@ -663,6 +678,37 @@ namespace APP2EFCore.Forms
             Sales.FormAddSales formAddSales = new Sales.FormAddSales();
             formAddSales.ShowDialog();
             ShowHomePage();
+        }
+
+        private void buttonSideSettings_Click(object sender, EventArgs e)
+        {
+            if (pageState != PageState.settings)
+            {
+                pageState = PageState.settings;
+                panelSettings.BringToFront();
+                this.Text = "الاعدادات";
+                textBoxSettingsUserName.Text = Settings.Default.CurrentUserName;
+                textBoxSettingsEmail.Text = Settings.Default.CurrentUserEmail;
+                textBoxSettingsProfitRatio.Text = Settings.Default.ProfitRatio.ToString();
+            }
+        }
+
+        private void button10_Click(object sender, EventArgs e)
+        {
+            FormChangePassword formChangePassword = new FormChangePassword();
+            formChangePassword.ShowDialog();
+        }
+
+        private void button11_Click(object sender, EventArgs e)
+        {
+            FormChangeProfitRatio formChangeProfitRatio = new FormChangeProfitRatio();
+            formChangeProfitRatio.ShowDialog();
+        }
+
+        private void button12_Click(object sender, EventArgs e)
+        {
+            formLogin.LogoutState = true;
+            this.Close();
         }
     }
 }

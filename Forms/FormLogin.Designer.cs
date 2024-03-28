@@ -62,6 +62,7 @@
             textBoxPassword.Location = new Point(64, 183);
             textBoxPassword.Name = "textBoxPassword";
             textBoxPassword.PasswordChar = '*';
+            textBoxPassword.RightToLeft = RightToLeft.No;
             textBoxPassword.Size = new Size(234, 23);
             textBoxPassword.TabIndex = 1;
             textBoxPassword.KeyPress += textBoxPassword_KeyPress;
@@ -81,6 +82,7 @@
             // 
             textBoxEmail.Location = new Point(64, 84);
             textBoxEmail.Name = "textBoxEmail";
+            textBoxEmail.RightToLeft = RightToLeft.No;
             textBoxEmail.Size = new Size(234, 23);
             textBoxEmail.TabIndex = 0;
             // 

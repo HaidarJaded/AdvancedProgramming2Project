@@ -17,6 +17,8 @@ namespace APP2EFCore.Invoices
                     .Include(i => i.Sales)
                     .ThenInclude(s => s.Product)
                     .ThenInclude(p => p.Category)
+                    .Include(i=>i.Sales)
+                    .ThenInclude(s=>s.User)
                     .FirstOrDefault(i => i.Id == invoiceID);
             }
             InitializeComponent();

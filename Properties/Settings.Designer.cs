@@ -69,5 +69,17 @@ namespace APP2EFCore.Properties {
                 this["CurrentUserType"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("0")]
+        public decimal ProfitRatio {
+            get {
+                return ((decimal)(this["ProfitRatio"]));
+            }
+            set {
+                this["ProfitRatio"] = value;
+            }
+        }
     }
 }

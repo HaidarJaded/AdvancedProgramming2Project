@@ -271,3 +271,5 @@ E:\CSProjects\AdvancedProgrammigEFCore\obj\Debug\net8.0-windows\APP2EFCore.Users
 E:\CSProjects\AdvancedProgrammigEFCore\obj\Debug\net8.0-windows\APP2EFCore.Products.FormEditProduct.resources
 E:\CSProjects\AdvancedProgrammigEFCore\obj\Debug\net8.0-windows\APP2EFCore.Invoices.FormInvoiceInfo.resources
 E:\CSProjects\AdvancedProgrammigEFCore\obj\Debug\net8.0-windows\APP2EFCore.Sales.FormAddSales.resources
+E:\CSProjects\AdvancedProgrammigEFCore\obj\Debug\net8.0-windows\APP2EFCore.Forms.FormChangePassword.resources
+E:\CSProjects\AdvancedProgrammigEFCore\obj\Debug\net8.0-windows\APP2EFCore.Forms.FormChangeProfitRatio.resources

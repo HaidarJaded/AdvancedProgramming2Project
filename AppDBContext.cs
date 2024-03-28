@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using APP2EFCore.Models;
+using Microsoft.EntityFrameworkCore;
 
 namespace APP2EFCore;
 
@@ -29,7 +30,11 @@ public class AppDBContext : DbContext
 
         modelBuilder.Entity<Sale>().Property(s => s.ProductsTotalPrice).HasColumnType("decimal(18, 2)");
 
-        modelBuilder.Entity <Sale>().Property(s => s.ProductsCount).HasDefaultValue(1);
+        modelBuilder.Entity<Sale>().Property(s => s.ProductsCount).HasDefaultValue(1);
+
+        modelBuilder.Entity<Sale>().Property(s => s.profitRatio).HasColumnType("decimal(10, 2)");
+
+        modelBuilder.Entity<Sale>().Property(s => s.profitRatio).HasDefaultValue(0);
 
         modelBuilder.Entity<Purchase>().Property(p => p.ProductsCount).HasDefaultValue(1);
 
@@ -40,6 +45,16 @@ public class AppDBContext : DbContext
         modelBuilder.Entity<Purchase>().Property(p => p.ProductPrice).HasColumnType("decimal(18, 2)");
 
         modelBuilder.Entity<Purchase>().Property(p => p.ProductsTotalPrice).HasColumnType("decimal(18, 2)");
+
+        modelBuilder.Entity<Center>().Property(p => p.ProfitRatio).HasColumnType("decimal(18, 2)");
+
+        modelBuilder.Entity<Center>().Property(p => p.ProfitRatio).HasDefaultValue(0);
+
+        modelBuilder.Entity<Center>().HasData(new Center()
+        {
+            Id = 1,
+            ProfitRatio = 0,
+        });
     }
     public DbSet<Category> Categories { get; set; }
     public DbSet<Invoice> Invoices { get; set; }
@@ -47,5 +62,6 @@ public class AppDBContext : DbContext
     public DbSet<Purchase> Purchases { get; set; }
     public DbSet<Sale> Sales { get; set; }
     public DbSet<User> Users { get; set; }
+    public DbSet<Center> Centers { get; set; }
 }
 

@@ -53,16 +53,17 @@
             buttonHomeCategory = new Button();
             buttonHomeUser = new Button();
             buttonHomePurchase = new Button();
-            panelInvoices = new Panel();
-            flowLayoutPanel5 = new FlowLayoutPanel();
-            button9 = new Button();
-            DGVInvoices = new DataGridView();
-            panelCategories = new Panel();
-            DGVCategories = new DataGridView();
-            panelCategoriesButtom = new FlowLayoutPanel();
-            button5 = new Button();
-            button1 = new Button();
-            button3 = new Button();
+            panelSettings = new Panel();
+            button10 = new Button();
+            panelSettingsProfitRatio = new Panel();
+            button11 = new Button();
+            textBoxSettingsProfitRatio = new TextBox();
+            label13 = new Label();
+            label11 = new Label();
+            label10 = new Label();
+            label9 = new Label();
+            textBoxSettingsEmail = new TextBox();
+            textBoxSettingsUserName = new TextBox();
             panelReports = new Panel();
             DGVReports = new DataGridView();
             panel1 = new Panel();
@@ -75,6 +76,16 @@
             label3 = new Label();
             label2 = new Label();
             comboBoxUserName = new ComboBox();
+            panelInvoices = new Panel();
+            flowLayoutPanel5 = new FlowLayoutPanel();
+            button9 = new Button();
+            DGVInvoices = new DataGridView();
+            panelCategories = new Panel();
+            DGVCategories = new DataGridView();
+            panelCategoriesButtom = new FlowLayoutPanel();
+            button5 = new Button();
+            button1 = new Button();
+            button3 = new Button();
             panelProducts = new Panel();
             DGVProducts = new DataGridView();
             panelSalesButtom = new FlowLayoutPanel();
@@ -104,7 +115,9 @@
             buttonSideReports = new Button();
             buttonSideInvoices = new Button();
             buttonSideSettings = new Button();
+            button12 = new Button();
             timer1 = new System.Windows.Forms.Timer(components);
+            progressBarWait = new ProgressBar();
             panelContainer.SuspendLayout();
             panelHome.SuspendLayout();
             panelHomeUsersCount.SuspendLayout();
@@ -113,15 +126,17 @@
             panelHomePurchasesPrice.SuspendLayout();
             panelHomeProductsCount.SuspendLayout();
             flowLayoutPanel1.SuspendLayout();
+            panelSettings.SuspendLayout();
+            panelSettingsProfitRatio.SuspendLayout();
+            panelReports.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)DGVReports).BeginInit();
+            panel1.SuspendLayout();
             panelInvoices.SuspendLayout();
             flowLayoutPanel5.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)DGVInvoices).BeginInit();
             panelCategories.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)DGVCategories).BeginInit();
             panelCategoriesButtom.SuspendLayout();
-            panelReports.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)DGVReports).BeginInit();
-            panel1.SuspendLayout();
             panelProducts.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)DGVProducts).BeginInit();
             panelSalesButtom.SuspendLayout();
@@ -141,9 +156,10 @@
             // panelContainer
             // 
             panelContainer.Controls.Add(panelHome);
+            panelContainer.Controls.Add(panelSettings);
+            panelContainer.Controls.Add(panelReports);
             panelContainer.Controls.Add(panelInvoices);
             panelContainer.Controls.Add(panelCategories);
-            panelContainer.Controls.Add(panelReports);
             panelContainer.Controls.Add(panelProducts);
             panelContainer.Controls.Add(panelUsers);
             panelContainer.Controls.Add(panelPurchases);
@@ -430,6 +446,254 @@
             buttonHomePurchase.UseVisualStyleBackColor = false;
             buttonHomePurchase.Click += buttonHomePurchase_Click;
             // 
+            // panelSettings
+            // 
+            panelSettings.Controls.Add(button10);
+            panelSettings.Controls.Add(panelSettingsProfitRatio);
+            panelSettings.Controls.Add(label10);
+            panelSettings.Controls.Add(label9);
+            panelSettings.Controls.Add(textBoxSettingsEmail);
+            panelSettings.Controls.Add(textBoxSettingsUserName);
+            panelSettings.Dock = DockStyle.Fill;
+            panelSettings.Location = new Point(0, 0);
+            panelSettings.Name = "panelSettings";
+            panelSettings.Size = new Size(729, 520);
+            panelSettings.TabIndex = 8;
+            // 
+            // button10
+            // 
+            button10.Anchor = AnchorStyles.None;
+            button10.Location = new Point(277, 212);
+            button10.Name = "button10";
+            button10.Size = new Size(89, 23);
+            button10.TabIndex = 2;
+            button10.Text = "تغيير كلمة السر";
+            button10.UseVisualStyleBackColor = true;
+            button10.Click += button10_Click;
+            // 
+            // panelSettingsProfitRatio
+            // 
+            panelSettingsProfitRatio.Anchor = AnchorStyles.None;
+            panelSettingsProfitRatio.Controls.Add(button11);
+            panelSettingsProfitRatio.Controls.Add(textBoxSettingsProfitRatio);
+            panelSettingsProfitRatio.Controls.Add(label13);
+            panelSettingsProfitRatio.Controls.Add(label11);
+            panelSettingsProfitRatio.Location = new Point(238, 264);
+            panelSettingsProfitRatio.Name = "panelSettingsProfitRatio";
+            panelSettingsProfitRatio.Size = new Size(251, 134);
+            panelSettingsProfitRatio.TabIndex = 1;
+            // 
+            // button11
+            // 
+            button11.Location = new Point(53, 72);
+            button11.Name = "button11";
+            button11.Size = new Size(75, 23);
+            button11.TabIndex = 2;
+            button11.Text = "تغيير النسبة";
+            button11.UseVisualStyleBackColor = true;
+            button11.Click += button11_Click;
+            // 
+            // textBoxSettingsProfitRatio
+            // 
+            textBoxSettingsProfitRatio.Location = new Point(82, 24);
+            textBoxSettingsProfitRatio.Name = "textBoxSettingsProfitRatio";
+            textBoxSettingsProfitRatio.ReadOnly = true;
+            textBoxSettingsProfitRatio.Size = new Size(50, 23);
+            textBoxSettingsProfitRatio.TabIndex = 0;
+            // 
+            // label13
+            // 
+            label13.AutoSize = true;
+            label13.Font = new Font("Microsoft Tai Le", 15F);
+            label13.ForeColor = Color.Black;
+            label13.Location = new Point(39, 24);
+            label13.Name = "label13";
+            label13.RightToLeft = RightToLeft.Yes;
+            label13.Size = new Size(28, 25);
+            label13.TabIndex = 0;
+            label13.Text = "%";
+            // 
+            // label11
+            // 
+            label11.AutoSize = true;
+            label11.Font = new Font("Microsoft Tai Le", 15F);
+            label11.ForeColor = Color.Black;
+            label11.Location = new Point(156, 22);
+            label11.Name = "label11";
+            label11.RightToLeft = RightToLeft.Yes;
+            label11.Size = new Size(79, 25);
+            label11.TabIndex = 0;
+            label11.Text = "نسبة الربح:";
+            // 
+            // label10
+            // 
+            label10.Anchor = AnchorStyles.None;
+            label10.AutoSize = true;
+            label10.Font = new Font("Microsoft Tai Le", 15F);
+            label10.ForeColor = Color.Black;
+            label10.Location = new Point(377, 164);
+            label10.Name = "label10";
+            label10.RightToLeft = RightToLeft.Yes;
+            label10.Size = new Size(114, 25);
+            label10.TabIndex = 0;
+            label10.Text = "البريد الالكتروني:";
+            // 
+            // label9
+            // 
+            label9.Anchor = AnchorStyles.None;
+            label9.AutoSize = true;
+            label9.Font = new Font("Microsoft Tai Le", 15F);
+            label9.ForeColor = Color.Black;
+            label9.Location = new Point(395, 123);
+            label9.Name = "label9";
+            label9.RightToLeft = RightToLeft.Yes;
+            label9.Size = new Size(95, 25);
+            label9.TabIndex = 0;
+            label9.Text = "اسم المستخدم:";
+            // 
+            // textBoxSettingsEmail
+            // 
+            textBoxSettingsEmail.Anchor = AnchorStyles.None;
+            textBoxSettingsEmail.Location = new Point(238, 167);
+            textBoxSettingsEmail.Name = "textBoxSettingsEmail";
+            textBoxSettingsEmail.ReadOnly = true;
+            textBoxSettingsEmail.Size = new Size(133, 23);
+            textBoxSettingsEmail.TabIndex = 0;
+            // 
+            // textBoxSettingsUserName
+            // 
+            textBoxSettingsUserName.Anchor = AnchorStyles.None;
+            textBoxSettingsUserName.Location = new Point(238, 125);
+            textBoxSettingsUserName.Name = "textBoxSettingsUserName";
+            textBoxSettingsUserName.ReadOnly = true;
+            textBoxSettingsUserName.Size = new Size(133, 23);
+            textBoxSettingsUserName.TabIndex = 0;
+            // 
+            // panelReports
+            // 
+            panelReports.Controls.Add(DGVReports);
+            panelReports.Controls.Add(panel1);
+            panelReports.Dock = DockStyle.Fill;
+            panelReports.Location = new Point(0, 0);
+            panelReports.Name = "panelReports";
+            panelReports.Size = new Size(729, 520);
+            panelReports.TabIndex = 6;
+            // 
+            // DGVReports
+            // 
+            DGVReports.AllowUserToAddRows = false;
+            DGVReports.AllowUserToDeleteRows = false;
+            DGVReports.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
+            DGVReports.BackgroundColor = Color.White;
+            DGVReports.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            DGVReports.Dock = DockStyle.Fill;
+            DGVReports.Location = new Point(0, 84);
+            DGVReports.Name = "DGVReports";
+            DGVReports.ReadOnly = true;
+            DGVReports.Size = new Size(729, 436);
+            DGVReports.TabIndex = 1;
+            // 
+            // panel1
+            // 
+            panel1.Controls.Add(checkBoxAllUsers);
+            panel1.Controls.Add(dateTimePickerTo);
+            panel1.Controls.Add(dateTimePickerFrom);
+            panel1.Controls.Add(textBoxTotalSalesPrice);
+            panel1.Controls.Add(label7);
+            panel1.Controls.Add(label5);
+            panel1.Controls.Add(label3);
+            panel1.Controls.Add(label2);
+            panel1.Controls.Add(comboBoxUserName);
+            panel1.Dock = DockStyle.Top;
+            panel1.Location = new Point(0, 0);
+            panel1.Name = "panel1";
+            panel1.Size = new Size(729, 84);
+            panel1.TabIndex = 0;
+            // 
+            // checkBoxAllUsers
+            // 
+            checkBoxAllUsers.Anchor = AnchorStyles.Top | AnchorStyles.Right;
+            checkBoxAllUsers.AutoSize = true;
+            checkBoxAllUsers.Location = new Point(519, 53);
+            checkBoxAllUsers.Name = "checkBoxAllUsers";
+            checkBoxAllUsers.Size = new Size(132, 19);
+            checkBoxAllUsers.TabIndex = 4;
+            checkBoxAllUsers.Text = "عرض جميع الموظفين";
+            checkBoxAllUsers.UseVisualStyleBackColor = true;
+            checkBoxAllUsers.CheckedChanged += checkBoxAllUsers_CheckedChanged;
+            // 
+            // dateTimePickerTo
+            // 
+            dateTimePickerTo.Location = new Point(140, 41);
+            dateTimePickerTo.Name = "dateTimePickerTo";
+            dateTimePickerTo.Size = new Size(200, 23);
+            dateTimePickerTo.TabIndex = 3;
+            dateTimePickerTo.ValueChanged += dateTimePickerTo_ValueChanged;
+            // 
+            // dateTimePickerFrom
+            // 
+            dateTimePickerFrom.Location = new Point(140, 15);
+            dateTimePickerFrom.Name = "dateTimePickerFrom";
+            dateTimePickerFrom.Size = new Size(200, 23);
+            dateTimePickerFrom.TabIndex = 3;
+            dateTimePickerFrom.ValueChanged += dateTimePickerFrom_ValueChanged;
+            // 
+            // textBoxTotalSalesPrice
+            // 
+            textBoxTotalSalesPrice.Location = new Point(25, 41);
+            textBoxTotalSalesPrice.Name = "textBoxTotalSalesPrice";
+            textBoxTotalSalesPrice.ReadOnly = true;
+            textBoxTotalSalesPrice.Size = new Size(100, 23);
+            textBoxTotalSalesPrice.TabIndex = 2;
+            textBoxTotalSalesPrice.TextAlign = HorizontalAlignment.Center;
+            // 
+            // label7
+            // 
+            label7.AutoSize = true;
+            label7.Location = new Point(348, 19);
+            label7.Name = "label7";
+            label7.Size = new Size(25, 15);
+            label7.TabIndex = 1;
+            label7.Text = "من:";
+            // 
+            // label5
+            // 
+            label5.AutoSize = true;
+            label5.Location = new Point(348, 46);
+            label5.Name = "label5";
+            label5.Size = new Size(27, 15);
+            label5.TabIndex = 1;
+            label5.Text = "الى:";
+            // 
+            // label3
+            // 
+            label3.AutoSize = true;
+            label3.Location = new Point(35, 15);
+            label3.Name = "label3";
+            label3.Size = new Size(90, 15);
+            label3.TabIndex = 1;
+            label3.Text = "اجمالي المبيعات:";
+            // 
+            // label2
+            // 
+            label2.Anchor = AnchorStyles.Top | AnchorStyles.Right;
+            label2.AutoSize = true;
+            label2.Location = new Point(651, 15);
+            label2.Name = "label2";
+            label2.Size = new Size(75, 15);
+            label2.TabIndex = 1;
+            label2.Text = "اسم الموظف:";
+            // 
+            // comboBoxUserName
+            // 
+            comboBoxUserName.Anchor = AnchorStyles.Top | AnchorStyles.Right;
+            comboBoxUserName.FormattingEnabled = true;
+            comboBoxUserName.Location = new Point(530, 12);
+            comboBoxUserName.Name = "comboBoxUserName";
+            comboBoxUserName.Size = new Size(121, 23);
+            comboBoxUserName.TabIndex = 0;
+            comboBoxUserName.SelectedIndexChanged += comboBoxUserName_SelectedIndexChanged;
+            // 
             // panelInvoices
             // 
             panelInvoices.Controls.Add(flowLayoutPanel5);
@@ -573,127 +837,6 @@
             button3.Text = "عرض المنتجات";
             button3.UseVisualStyleBackColor = false;
             button3.Click += button3_Click;
-            // 
-            // panelReports
-            // 
-            panelReports.Controls.Add(DGVReports);
-            panelReports.Controls.Add(panel1);
-            panelReports.Dock = DockStyle.Fill;
-            panelReports.Location = new Point(0, 0);
-            panelReports.Name = "panelReports";
-            panelReports.Size = new Size(729, 520);
-            panelReports.TabIndex = 6;
-            // 
-            // DGVReports
-            // 
-            DGVReports.AllowUserToAddRows = false;
-            DGVReports.AllowUserToDeleteRows = false;
-            DGVReports.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
-            DGVReports.BackgroundColor = Color.White;
-            DGVReports.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            DGVReports.Dock = DockStyle.Fill;
-            DGVReports.Location = new Point(0, 84);
-            DGVReports.Name = "DGVReports";
-            DGVReports.ReadOnly = true;
-            DGVReports.Size = new Size(729, 436);
-            DGVReports.TabIndex = 1;
-            // 
-            // panel1
-            // 
-            panel1.Controls.Add(checkBoxAllUsers);
-            panel1.Controls.Add(dateTimePickerTo);
-            panel1.Controls.Add(dateTimePickerFrom);
-            panel1.Controls.Add(textBoxTotalSalesPrice);
-            panel1.Controls.Add(label7);
-            panel1.Controls.Add(label5);
-            panel1.Controls.Add(label3);
-            panel1.Controls.Add(label2);
-            panel1.Controls.Add(comboBoxUserName);
-            panel1.Dock = DockStyle.Top;
-            panel1.Location = new Point(0, 0);
-            panel1.Name = "panel1";
-            panel1.Size = new Size(729, 84);
-            panel1.TabIndex = 0;
-            // 
-            // checkBoxAllUsers
-            // 
-            checkBoxAllUsers.AutoSize = true;
-            checkBoxAllUsers.Location = new Point(519, 53);
-            checkBoxAllUsers.Name = "checkBoxAllUsers";
-            checkBoxAllUsers.Size = new Size(132, 19);
-            checkBoxAllUsers.TabIndex = 4;
-            checkBoxAllUsers.Text = "عرض جميع الموظفين";
-            checkBoxAllUsers.UseVisualStyleBackColor = true;
-            checkBoxAllUsers.CheckedChanged += checkBoxAllUsers_CheckedChanged;
-            // 
-            // dateTimePickerTo
-            // 
-            dateTimePickerTo.Location = new Point(140, 41);
-            dateTimePickerTo.Name = "dateTimePickerTo";
-            dateTimePickerTo.Size = new Size(200, 23);
-            dateTimePickerTo.TabIndex = 3;
-            dateTimePickerTo.ValueChanged += dateTimePickerTo_ValueChanged;
-            // 
-            // dateTimePickerFrom
-            // 
-            dateTimePickerFrom.Location = new Point(140, 15);
-            dateTimePickerFrom.Name = "dateTimePickerFrom";
-            dateTimePickerFrom.Size = new Size(200, 23);
-            dateTimePickerFrom.TabIndex = 3;
-            dateTimePickerFrom.ValueChanged += dateTimePickerFrom_ValueChanged;
-            // 
-            // textBoxTotalSalesPrice
-            // 
-            textBoxTotalSalesPrice.Location = new Point(25, 41);
-            textBoxTotalSalesPrice.Name = "textBoxTotalSalesPrice";
-            textBoxTotalSalesPrice.ReadOnly = true;
-            textBoxTotalSalesPrice.Size = new Size(100, 23);
-            textBoxTotalSalesPrice.TabIndex = 2;
-            // 
-            // label7
-            // 
-            label7.AutoSize = true;
-            label7.Location = new Point(348, 19);
-            label7.Name = "label7";
-            label7.Size = new Size(25, 15);
-            label7.TabIndex = 1;
-            label7.Text = "من:";
-            // 
-            // label5
-            // 
-            label5.AutoSize = true;
-            label5.Location = new Point(348, 46);
-            label5.Name = "label5";
-            label5.Size = new Size(27, 15);
-            label5.TabIndex = 1;
-            label5.Text = "الى:";
-            // 
-            // label3
-            // 
-            label3.AutoSize = true;
-            label3.Location = new Point(35, 15);
-            label3.Name = "label3";
-            label3.Size = new Size(90, 15);
-            label3.TabIndex = 1;
-            label3.Text = "اجمالي المبيعات:";
-            // 
-            // label2
-            // 
-            label2.AutoSize = true;
-            label2.Location = new Point(651, 15);
-            label2.Name = "label2";
-            label2.Size = new Size(75, 15);
-            label2.TabIndex = 1;
-            label2.Text = "اسم الموظف:";
-            // 
-            // comboBoxUserName
-            // 
-            comboBoxUserName.FormattingEnabled = true;
-            comboBoxUserName.Location = new Point(530, 12);
-            comboBoxUserName.Name = "comboBoxUserName";
-            comboBoxUserName.Size = new Size(121, 23);
-            comboBoxUserName.TabIndex = 0;
-            comboBoxUserName.SelectedIndexChanged += comboBoxUserName_SelectedIndexChanged;
             // 
             // panelProducts
             // 
@@ -918,6 +1061,7 @@
             // panelSideBar
             // 
             panelSideBar.AutoScroll = true;
+            panelSideBar.AutoSize = true;
             panelSideBar.BackColor = Color.FromArgb(45, 45, 45);
             panelSideBar.Controls.Add(panel5);
             panelSideBar.Controls.Add(buttonSideHome);
@@ -929,6 +1073,7 @@
             panelSideBar.Controls.Add(buttonSideReports);
             panelSideBar.Controls.Add(buttonSideInvoices);
             panelSideBar.Controls.Add(buttonSideSettings);
+            panelSideBar.Controls.Add(button12);
             panelSideBar.Dock = DockStyle.Right;
             panelSideBar.Location = new Point(729, 0);
             panelSideBar.Name = "panelSideBar";
@@ -1135,6 +1280,26 @@
             buttonSideSettings.TabIndex = 0;
             buttonSideSettings.Text = "الاعدادات";
             buttonSideSettings.UseVisualStyleBackColor = false;
+            buttonSideSettings.Click += buttonSideSettings_Click;
+            // 
+            // button12
+            // 
+            button12.AutoEllipsis = true;
+            button12.BackColor = Color.Transparent;
+            button12.FlatAppearance.BorderSize = 0;
+            button12.FlatAppearance.MouseDownBackColor = Color.FromArgb(45, 45, 45);
+            button12.FlatStyle = FlatStyle.Flat;
+            button12.Font = new Font("Microsoft Sans Serif", 10F);
+            button12.ForeColor = Color.Cyan;
+            button12.Image = (Image)resources.GetObject("button12.Image");
+            button12.ImageAlign = ContentAlignment.MiddleLeft;
+            button12.Location = new Point(3, 515);
+            button12.Name = "button12";
+            button12.Size = new Size(151, 35);
+            button12.TabIndex = 2;
+            button12.Text = "تسجيل الخروج";
+            button12.UseVisualStyleBackColor = false;
+            button12.Click += button12_Click;
             // 
             // timer1
             // 
@@ -1142,12 +1307,24 @@
             timer1.Interval = 1000;
             timer1.Tick += timer1_Tick;
             // 
+            // progressBarWait
+            // 
+            progressBarWait.Anchor = AnchorStyles.Bottom | AnchorStyles.Left;
+            progressBarWait.Location = new Point(0, 495);
+            progressBarWait.MarqueeAnimationSpeed = 200;
+            progressBarWait.Name = "progressBarWait";
+            progressBarWait.Size = new Size(153, 23);
+            progressBarWait.Style = ProgressBarStyle.Marquee;
+            progressBarWait.TabIndex = 3;
+            progressBarWait.Visible = false;
+            // 
             // FormMain
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             BackColor = Color.White;
             ClientSize = new Size(886, 520);
+            Controls.Add(progressBarWait);
             Controls.Add(panelContainer);
             Controls.Add(panelSideBar);
             Name = "FormMain";
@@ -1170,16 +1347,20 @@
             panelHomeProductsCount.ResumeLayout(false);
             panelHomeProductsCount.PerformLayout();
             flowLayoutPanel1.ResumeLayout(false);
+            panelSettings.ResumeLayout(false);
+            panelSettings.PerformLayout();
+            panelSettingsProfitRatio.ResumeLayout(false);
+            panelSettingsProfitRatio.PerformLayout();
+            panelReports.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)DGVReports).EndInit();
+            panel1.ResumeLayout(false);
+            panel1.PerformLayout();
             panelInvoices.ResumeLayout(false);
             flowLayoutPanel5.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)DGVInvoices).EndInit();
             panelCategories.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)DGVCategories).EndInit();
             panelCategoriesButtom.ResumeLayout(false);
-            panelReports.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)DGVReports).EndInit();
-            panel1.ResumeLayout(false);
-            panel1.PerformLayout();
             panelProducts.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)DGVProducts).EndInit();
             panelSalesButtom.ResumeLayout(false);
@@ -1196,6 +1377,7 @@
             panel5.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)pictureBox1).EndInit();
             ResumeLayout(false);
+            PerformLayout();
         }
 
         #endregion
@@ -1274,5 +1456,18 @@
         private DataGridView DGVInvoices;
         private FlowLayoutPanel flowLayoutPanel5;
         private Button button9;
+        private Panel panelSettings;
+        private Panel panelSettingsProfitRatio;
+        private TextBox textBoxSettingsProfitRatio;
+        private Label label13;
+        private Label label11;
+        private Label label10;
+        private Label label9;
+        private TextBox textBoxSettingsEmail;
+        private TextBox textBoxSettingsUserName;
+        private Button button10;
+        private Button button11;
+        private Button button12;
+        private ProgressBar progressBarWait;
     }
 }

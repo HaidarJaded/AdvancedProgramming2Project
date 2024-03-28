@@ -52,7 +52,7 @@ namespace APP2EFCore.Purchases
                     decimal productPrice = Convert.ToDecimal(row.Cells[3].Value);
                     int categoryId = Convert.ToInt32(row.Cells[5].Value);
                     Category category = db.Categories.Find(categoryId);
-                    Product product = IsProductExist(productName);
+                    Product product = ProductExists(productName);
                     if (product == null)
                     {
                         product = new Product()
@@ -118,7 +118,7 @@ namespace APP2EFCore.Purchases
             labelTotalInvoice.Text = "0";
         }
 
-        private Product? IsProductExist(string productName)
+        private Product? ProductExists(string productName)
         {
             using (AppDBContext db = new AppDBContext())
             {
