@@ -19,9 +19,8 @@ namespace APP2EFCore.Forms
         {
             InitializeComponent();
             this.formLogin = formLogin;
-            Settings.Default.CurrentUserType = UserTypes.admin.ToString();
         }
-        private async Task ShowHomePage()
+        private async Task ShowHomePageAsync()
         {
             progressBarWait.Visible = true;
 
@@ -57,7 +56,7 @@ namespace APP2EFCore.Forms
             label.Text = value + " " + unit;
         }
 
-        private async Task ShowCategoriesPage()
+        private async Task ShowCategoriesPageAsync()
         {
             progressBarWait.Visible = true;
 
@@ -80,7 +79,7 @@ namespace APP2EFCore.Forms
             progressBarWait.Visible = false;
         }
 
-        private async Task ShowSalesPage()
+        private async Task ShowSalesPageAsync()
         {
             progressBarWait.Visible = true;
 
@@ -115,7 +114,7 @@ namespace APP2EFCore.Forms
             progressBarWait.Visible = false;
         }
 
-        private async Task ShowPurchasesPage()
+        private async Task ShowPurchasesPageAsync()
         {
             progressBarWait.Visible = true;
 
@@ -147,7 +146,7 @@ namespace APP2EFCore.Forms
             progressBarWait.Visible = false;
         }
 
-        private async Task ShowUsersPage()
+        private async Task ShowUsersPageAsync()
         {
             progressBarWait.Visible = true;
 
@@ -171,7 +170,7 @@ namespace APP2EFCore.Forms
 
         }
 
-        private async Task ShowProductsPage()
+        private async Task ShowProductsPageAsync()
         {
             progressBarWait.Visible = true;
 
@@ -199,7 +198,7 @@ namespace APP2EFCore.Forms
 
         }
 
-        private async Task GetUsersName()
+        private async Task GetUsersNameAsync()
         {
             progressBarWait.Visible = true;
 
@@ -221,63 +220,57 @@ namespace APP2EFCore.Forms
 
         }
 
-        private async Task ShowReportPage()
+        private async Task ShowReportPageAsync()
         {
             progressBarWait.Visible = true;
 
             DateTime startDate = dateTimePickerFrom.Value.Date;
             DateTime endDate = dateTimePickerTo.Value.Date;
 
-            try
+
+            using AppDBContext db = new();
+            var salesBetweenDates = await Task.Run(() =>
             {
-                var salesBetweenDates = await Task.Run(() =>
-                {
-                    using AppDBContext db = new();
-                    return db.Sales
-                    .Where(s => s.Date.Date >= startDate && s.Date.Date <= endDate);
-                });
+                return db.Sales
+                .Where(s => s.Date.Date >= startDate && s.Date.Date <= endDate);
+            });
 
-                if (!checkBoxAllUsers.Checked)
-                {
-                    int userId = Convert.ToInt32(comboBoxUserName.SelectedValue);
-                    salesBetweenDates = salesBetweenDates.Where(s => s.User.Id == userId);
-                }
-
-                var reportData = salesBetweenDates.Select(s => new
-                {
-                    s.Id,
-                    ProductName = s.Product.Name,
-                    CategoryName = s.Product.Category.Name,
-                    s.ProductsCount,
-                    s.ProductPrice,
-                    s.ProductsTotalPrice,
-                    InvoiceId = s.Invoice.Id,
-                    s.Date,
-                    UserName = s.User.Name
-                }).ToList();
-
-                DGVReports.DataSource = reportData;
-                DGVReports.Columns[0].Visible = false;
-                DGVReports.Columns[1].HeaderText = "اسم المنتج";
-                DGVReports.Columns[2].HeaderText = "الصنف";
-                DGVReports.Columns[3].HeaderText = "الكمية";
-                DGVReports.Columns[4].HeaderText = "السعر";
-                DGVReports.Columns[5].HeaderText = "السعر الاجمالي";
-                DGVReports.Columns[6].HeaderText = "رقم الفاتورة";
-                DGVReports.Columns[7].HeaderText = "تاريخ البيع";
-                DGVReports.Columns[8].HeaderText = "اسم البائع";
-
-                textBoxTotalSalesPrice.Text = reportData.Sum(s => s.ProductsTotalPrice).ToString();
-                progressBarWait.Visible = false;
-            }
-            catch (Exception ex)
+            if (!checkBoxAllUsers.Checked)
             {
-                MessageBox.Show($"An error occurred: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                int userId = Convert.ToInt32(comboBoxUserName.SelectedValue);
+                salesBetweenDates = salesBetweenDates.Where(s => s.User.Id == userId);
             }
+
+            var reportData = salesBetweenDates.Select(s => new
+            {
+                s.Id,
+                ProductName = s.Product.Name,
+                CategoryName = s.Product.Category.Name,
+                s.ProductsCount,
+                s.ProductPrice,
+                s.ProductsTotalPrice,
+                InvoiceId = s.Invoice.Id,
+                s.Date,
+                UserName = s.User.Name
+            }).ToList();
+
+            DGVReports.DataSource = reportData;
+            DGVReports.Columns[0].Visible = false;
+            DGVReports.Columns[1].HeaderText = "اسم المنتج";
+            DGVReports.Columns[2].HeaderText = "الصنف";
+            DGVReports.Columns[3].HeaderText = "الكمية";
+            DGVReports.Columns[4].HeaderText = "السعر";
+            DGVReports.Columns[5].HeaderText = "السعر الاجمالي";
+            DGVReports.Columns[6].HeaderText = "رقم الفاتورة";
+            DGVReports.Columns[7].HeaderText = "تاريخ البيع";
+            DGVReports.Columns[8].HeaderText = "اسم البائع";
+
+            textBoxTotalSalesPrice.Text = reportData.Sum(s => s.ProductsTotalPrice).ToString();
+            progressBarWait.Visible = false;
 
         }
 
-        private async Task ShowInvoicesPage()
+        private async Task ShowInvoicesPageAsync()
         {
             progressBarWait.Visible = true;
 
@@ -316,7 +309,7 @@ namespace APP2EFCore.Forms
             {
                 db.Categories.Remove(category);
                 db.SaveChanges();
-                Task task = ShowCategoriesPage();
+                Task task = ShowCategoriesPageAsync();
                 await task;
             }
         }
@@ -359,7 +352,7 @@ namespace APP2EFCore.Forms
             string userName = Settings.Default.CurrentUserName;
             labelUserName.Text = string.IsNullOrWhiteSpace(userName) ? "UserName" : userName;
 
-            Task task = ShowHomePage();
+            Task task = ShowHomePageAsync();
             await task;
 
             dateTimePickerTo.MaxDate = DateTime.Now;
@@ -373,7 +366,7 @@ namespace APP2EFCore.Forms
             pageState = PageState.categories;
             this.Text = "الاصناف";
             panelCategories.BringToFront();
-            Task task = ShowCategoriesPage();
+            Task task = ShowCategoriesPageAsync();
             await task;
         }
 
@@ -384,16 +377,19 @@ namespace APP2EFCore.Forms
             panelHome.BringToFront();
 
             progressBarWait.Visible = true;
-            Task homePageTask = ShowHomePage();
+            Task homePageTask = ShowHomePageAsync();
             await homePageTask;
             progressBarWait.Visible = false;
             this.Text = "الصفحة الرئيسية";
         }
 
-        private void button5_Click_1(object sender, EventArgs e)
+        private async void button5_Click_1(object sender, EventArgs e)
         {
             FormAddCategory formAddCategory = new();
             formAddCategory.ShowDialog();
+
+            Task task = ShowCategoriesPageAsync();
+            await task;
         }
 
         private async void buttonSideSales_Click(object sender, EventArgs e)
@@ -403,7 +399,7 @@ namespace APP2EFCore.Forms
             pageState = PageState.sales;
             this.Text = "المبيعات";
             panelSales.BringToFront();
-            Task salesPageTask = ShowSalesPage();
+            Task salesPageTask = ShowSalesPageAsync();
             await salesPageTask;
         }
 
@@ -414,7 +410,7 @@ namespace APP2EFCore.Forms
             panelPurchases.BringToFront();
             pageState = PageState.purchases;
             this.Text = "المشتريات";
-            Task purchasesPageTask = ShowPurchasesPage();
+            Task purchasesPageTask = ShowPurchasesPageAsync();
             await purchasesPageTask;
         }
 
@@ -423,7 +419,7 @@ namespace APP2EFCore.Forms
             FormAddPurchases formAddPurchases = new();
             formAddPurchases.ShowDialog();
 
-            Task purchasesPageTask = ShowPurchasesPage();
+            Task purchasesPageTask = ShowPurchasesPageAsync();
             await purchasesPageTask;
         }
 
@@ -447,7 +443,7 @@ namespace APP2EFCore.Forms
             panelProducts.BringToFront();
             pageState = PageState.products;
             this.Text = "المنتجات";
-            Task task = ShowProductsPage();
+            Task task = ShowProductsPageAsync();
             await task;
         }
 
@@ -458,7 +454,7 @@ namespace APP2EFCore.Forms
             panelUsers.BringToFront();
             pageState = PageState.user;
             this.Text = "البائعين";
-            Task task = ShowUsersPage();
+            Task task = ShowUsersPageAsync();
             await task;
         }
 
@@ -467,7 +463,7 @@ namespace APP2EFCore.Forms
             FormAddUser formAddUser = new();
             formAddUser.ShowDialog();
 
-            Task task = ShowUsersPage();
+            Task task = ShowUsersPageAsync();
             await task;
         }
 
@@ -484,7 +480,7 @@ namespace APP2EFCore.Forms
             {
                 db.Users.Remove(user);
                 db.SaveChanges();
-                Task task = ShowUsersPage();
+                Task task = ShowUsersPageAsync();
                 await task;
             }
 
@@ -501,13 +497,13 @@ namespace APP2EFCore.Forms
             FormEditUser formEditUser = new(user, db);
             formEditUser.ShowDialog();
 
-            Task task = ShowUsersPage();
+            Task task = ShowUsersPageAsync();
             await task;
         }
 
         private async void button6_Click(object sender, EventArgs e)
         {
-            if (DGVUsers.CurrentRow is null) return;
+            if (DGVProducts.CurrentRow is null) return;
 
             using AppDBContext db = new();
 
@@ -518,7 +514,7 @@ namespace APP2EFCore.Forms
             FormEditProduct formEditProduct = new(product);
             formEditProduct.ShowDialog();
 
-            Task task = ShowProductsPage();
+            Task task = ShowProductsPageAsync();
             await task;
         }
 
@@ -530,7 +526,7 @@ namespace APP2EFCore.Forms
             this.Text = "التقارير";
             panelReports.BringToFront();
 
-            Task task = GetUsersName();
+            Task task = GetUsersNameAsync();
             await task;
         }
 
@@ -538,7 +534,7 @@ namespace APP2EFCore.Forms
         {
             if (pageState != PageState.reports) return;
 
-            Task task = ShowReportPage();
+            Task task = ShowReportPageAsync();
             await task;
         }
 
@@ -546,7 +542,7 @@ namespace APP2EFCore.Forms
         {
             if (pageState != PageState.reports) return;
 
-            Task task = ShowReportPage();
+            Task task = ShowReportPageAsync();
             await task;
         }
 
@@ -554,7 +550,7 @@ namespace APP2EFCore.Forms
         {
             if (pageState != PageState.reports) return;
 
-            Task task = ShowReportPage();
+            Task task = ShowReportPageAsync();
             await task;
 
             dateTimePickerFrom.MaxDate = dateTimePickerTo.Value;
@@ -564,7 +560,7 @@ namespace APP2EFCore.Forms
         {
             if (pageState != PageState.reports) return;
 
-            Task task = ShowReportPage();
+            Task task = ShowReportPageAsync();
             await task;
         }
 
@@ -576,7 +572,7 @@ namespace APP2EFCore.Forms
             pageState = PageState.invoices;
             this.Text = "الفواتير";
 
-            Task task = ShowInvoicesPage();
+            Task task = ShowInvoicesPageAsync();
             await task;
         }
 
@@ -594,7 +590,7 @@ namespace APP2EFCore.Forms
             FormAddCategory formAddCategory = new();
             formAddCategory.ShowDialog();
 
-            Task task = ShowHomePage();
+            Task task = ShowHomePageAsync();
             await task;
         }
 
@@ -603,7 +599,7 @@ namespace APP2EFCore.Forms
             FormAddUser formAddUser = new();
             formAddUser.ShowDialog();
 
-            Task task = ShowHomePage();
+            Task task = ShowHomePageAsync();
             await task;
         }
 
@@ -612,7 +608,7 @@ namespace APP2EFCore.Forms
             FormAddPurchases formAddPurchases = new();
             formAddPurchases.ShowDialog();
 
-            Task task = ShowHomePage();
+            Task task = ShowHomePageAsync();
             await task;
         }
 
@@ -621,7 +617,7 @@ namespace APP2EFCore.Forms
             FormAddSales formAddSales = new();
             formAddSales.ShowDialog();
 
-            Task task = ShowHomePage();
+            Task task = ShowHomePageAsync();
             await task;
         }
 

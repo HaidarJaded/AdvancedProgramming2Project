@@ -8,36 +8,42 @@ namespace APP2EFCore.Forms
         {
             InitializeComponent();
         }
-
-        private void button1_Click(object sender, EventArgs e)
+        bool IsPasswordValid(string password)
         {
-            using (AppDBContext db = new AppDBContext())
+            return password.Length >= 8;
+        }
+        bool IsPasswordConfirmed(string password, string passwordConfirm)
+        {
+            return password == passwordConfirm;
+        }
+        private async void button1_Click(object sender, EventArgs e)
+        {
+            using AppDBContext db = new ();
+            User? user =await db.Users.FindAsync(Settings.Default.CurrentUserId);
+            if (user is null) { return; }
+
+            string currentPassword = PasswordEncrypter.EncryptPassword(textBoxCurrentPassword.Text);
+            string newPassword = textBoxPassword.Text;
+            string passwordConfirmation = textBoxPasswordConfirmation.Text;
+            if (currentPassword != user.Password)
             {
-                User? user = db.Users.Find(Settings.Default.CurrentUserId);
-                if (user == null) { return; }
-                string currentPassword = PasswordEncrypter.EncryptPassword(textBoxCurrentPassword.Text);
-                string newPassword = textBoxPassword.Text;
-                string passwordConfirmation = textBoxPasswordConfirmation.Text;
-                if (currentPassword != user.Password)
-                {
-                    MessageBox.Show("!كلمة المرور الحالية خاطئة");
-                    return;
-                }
-                if (newPassword.Length < 8)
-                {
-                    MessageBox.Show("كلمة المرور يجب ان تكون 8 محارف على الاقل!");
-                    return;
-                }
-                if (newPassword != passwordConfirmation)
-                {
-                    MessageBox.Show("!كلمة المرور واعادتها غير متطابقتين");
-                    return;
-                }
-                user.Password = PasswordEncrypter.EncryptPassword(newPassword);
-                db.SaveChanges();
-                MessageBox.Show("تم تغيير كلمة المرور بنجاح");
-                this.Close();
+                MessageBox.Show("!كلمة المرور الحالية خاطئة");
+                return;
             }
+            if (!IsPasswordValid(textBoxPassword.Text))
+            {
+                MessageBox.Show("كلمة المرور يجب ان تكون 8 محارف على الاقل!");
+                return;
+            }
+            if (!IsPasswordConfirmed(textBoxPassword.Text, textBoxPasswordConfirmation.Text))
+            {
+                MessageBox.Show("يرجى تأكيد كلمة المرور بشكل صحيح");
+                return;
+            }
+            user.Password = PasswordEncrypter.EncryptPassword(newPassword);
+            await db.SaveChangesAsync();
+            MessageBox.Show("تم تغيير كلمة المرور بنجاح");
+            this.Close();
 
         }
     }

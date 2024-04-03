@@ -1,115 +1,93 @@
-﻿using APP2EFCore.Enums;
+﻿using APP2EFCore.Categories;
+using APP2EFCore.Enums;
 using Microsoft.EntityFrameworkCore;
 
 namespace APP2EFCore.Purchases
 {
     public partial class FormAddPurchases : Form
     {
-        Thread GetCategoriesThread;
-        Thread AddPurchaseThread;
-        string state = "";
         public FormAddPurchases()
         {
             InitializeComponent();
         }
 
-        private void GetCategories()
+        private async Task GetCategoriesAsync()
         {
-            using (AppDBContext db = new AppDBContext())
+            var categories = await Task.Run(() =>
             {
-                var categories = db.Categories.Select(c => new
+                using AppDBContext db = new();
+                return db.Categories.Select(c => new
                 {
                     c.Id,
                     c.Name
                 }).ToArray();
-                comboBoxProductCategory.Invoke((MethodInvoker)delegate
-                {
-                    comboBoxProductCategory.DataSource = categories;
-                    comboBoxProductCategory.DisplayMember = "Name";
-                    comboBoxProductCategory.ValueMember = "Id";
-                });
-            }
+            });
+
+            comboBoxProductCategory.DataSource = categories;
+            comboBoxProductCategory.DisplayMember = "Name";
+            comboBoxProductCategory.ValueMember = "Id";
         }
 
-        private void AddPurchases()
+        private async Task AddPurchasesAsync(decimal totalInvoicePrice)
         {
-            button3.Invoke((MethodInvoker)delegate
+            button3.Enabled = false;
+            button4.Enabled = false;
+
+            await Task.Run(async () =>
             {
-                button3.Enabled = false;
-                button4.Enabled = false;
+                      AppDBContext db = new();
+                      Invoice invoice = new()
+                      {
+                          Type = InvoiceType.purchase,
+                      };
+                      await db.Invoices.AddAsync(invoice);
+                      foreach (DataGridViewRow row in DGVProducts.Rows)
+                      {
+                          string productName = row.Cells[0].Value.ToString();
+                          int productCount = Convert.ToInt32(row.Cells[2].Value);
+                          decimal productPrice = Convert.ToDecimal(row.Cells[3].Value);
+                          int categoryId = Convert.ToInt32(row.Cells[5].Value);
+                          Product product = await ProductExistsAsync(productName);
+                          Category category = await db.Categories.FindAsync(categoryId);
+                          if (product is null)
+                          {
+                              product = new()
+                              {
+                                  Name = productName,
+                                  Count = productCount,
+                                  Price = productPrice,
+                                  Category = category
+                              };
+                              await db.Products.AddAsync(product);
+                              category.ProductsCount++;
+                          }
+                          else
+                          {
+                              category = product.Category;
+                              product.Count += productCount;
+                              product.Price = productPrice;
+                          }
+
+                          Purchase purchase = new()
+                          {
+                              ProductPrice = productPrice,
+                              ProductsCount = productCount,
+                              Invoice = invoice,
+                              Product = product,
+                          };
+                          await db.Purchases.AddAsync(purchase);
+                      }
+                      invoice.Total = totalInvoicePrice;
+                      await db.SaveChangesAsync();
             });
-            using (AppDBContext db = new AppDBContext())
-            {
-                Invoice invoice = new Invoice()
-                {
-                    Type = InvoiceType.purchase,
-                };
-                db.Invoices.Add(invoice);
-                foreach (DataGridViewRow row in DGVProducts.Rows)
-                {
-                    string productName = row.Cells[0].Value.ToString();
-                    int productCount = Convert.ToInt32(row.Cells[2].Value);
-                    decimal productPrice = Convert.ToDecimal(row.Cells[3].Value);
-                    int categoryId = Convert.ToInt32(row.Cells[5].Value);
-                    Category category = db.Categories.Find(categoryId);
-                    Product product = ProductExists(productName);
-                    if (product == null)
-                    {
-                        product = new Product()
-                        {
-                            Name = productName,
-                            Count = productCount,
-                            Price = productPrice,
-                            Category = category
-                        };
-                        db.Products.Add(product);
-                        category.ProductsCount += 1;
-                    }
-                    else
-                    {
-                        product = db.Products.Find(product.Id);
-                        category = product.Category;
-                        product.Count += productCount;
-                        product.Price = productPrice;
-                    }
-                    Purchase purchase = new Purchase()
-                    {
-                        ProductPrice = productPrice,
-                        ProductsCount = productCount,
-                        Invoice = invoice,
-                        Product = product,
-                    };
-                    db.Purchases.Add(purchase);
-                }
-                invoice.Total = decimal.Parse(labelTotalInvoice.Text);
-                db.SaveChanges();
-            }
-            if (state == "close")
-            {
-                this.Invoke((MethodInvoker)delegate
-                {
-                    this.Close();
-                });
-            }
-            else
-            {
-                cleanPage();
-                button3.Invoke((MethodInvoker)delegate
-                {
-                    button3.Enabled = true;
-                    button4.Enabled = true;
-                });
-            }
+
+            cleanPage();
+            button3.Enabled = true;
+            button4.Enabled = true;
         }
 
         private void cleanPage()
         {
-            if (InvokeRequired)
-            {
-                Invoke(new MethodInvoker(cleanPage));
-                return;
-            }
-
             textBoxProductName.Text = "";
             numericProductCount.Value = 1;
             comboBoxProductCategory.SelectedIndex = -1;
@@ -118,12 +96,11 @@ namespace APP2EFCore.Purchases
             labelTotalInvoice.Text = "0";
         }
 
-        private Product? ProductExists(string productName)
+        private async Task<Product?> ProductExistsAsync(string productName)
         {
-            using (AppDBContext db = new AppDBContext())
-            {
-                return db.Products.Include(p => p.Category).Where(p => p.Name == productName).FirstOrDefault();
-            }
+            using AppDBContext db = new();
+            return await db.Products.AsNoTracking().Include(p => p.Category)
+                .FirstOrDefaultAsync(p => p.Name == productName);
         }
 
         private void button1_Click(object sender, EventArgs e)
@@ -141,6 +118,7 @@ namespace APP2EFCore.Purchases
             int productCount = Convert.ToInt32(numericProductCount.Value);
             decimal productPrice = numericProductPrice.Value;
             decimal totalPrice = productCount * productPrice;
+
             foreach (DataGridViewRow row in DGVProducts.Rows)
             {
                 if (row.Cells[0].Value.ToString() == productName)
@@ -167,61 +145,51 @@ namespace APP2EFCore.Purchases
             textBoxProductName.Focus();
         }
 
-        private void FormAddPurchases_Activated(object sender, EventArgs e)
+        private async void FormAddPurchases_Activated(object sender, EventArgs e)
         {
-            if (GetCategoriesThread == null || GetCategoriesThread.ThreadState == ThreadState.Stopped)
-            {
-                GetCategoriesThread = new Thread(GetCategories);
-                GetCategoriesThread.Start();
-            }
+            Task task = GetCategoriesAsync();
+            await task;
         }
 
         private void linkLabel1_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
-            Categories.FormAddCategory formAddCategory = new Categories.FormAddCategory();
+            FormAddCategory formAddCategory = new();
             formAddCategory.ShowDialog();
         }
 
         private void button2_Click(object sender, EventArgs e)
         {
-            if (DGVProducts.CurrentRow != null)
-            {
-                int totalProductsPrice = Convert.ToInt32(DGVProducts.CurrentRow.Cells[4].Value);
-                DGVProducts.Rows.Remove(DGVProducts.CurrentRow);
-                labelTotalInvoice.Text = (int.Parse(labelTotalInvoice.Text) - totalProductsPrice).ToString();
-            }
+            if (DGVProducts.CurrentRow is null) return;
+
+            int totalProductsPrice = Convert.ToInt32(DGVProducts.CurrentRow.Cells[4].Value);
+            DGVProducts.Rows.Remove(DGVProducts.CurrentRow);
+            labelTotalInvoice.Text = (int.Parse(labelTotalInvoice.Text) - totalProductsPrice).ToString();
         }
 
-        private void button3_Click(object sender, EventArgs e)
+        private async void button3_Click(object sender, EventArgs e)
         {
             if (DGVProducts.Rows.Count == 0)
             {
                 MessageBox.Show("الجدول فارغ");
                 return;
             }
-            if (AddPurchaseThread == null || AddPurchaseThread.ThreadState == ThreadState.Stopped)
-            {
-                AddPurchaseThread = new Thread(AddPurchases);
-                AddPurchaseThread.Start();
-                textBoxProductName.Focus();
-            }
+
+            Task task = AddPurchasesAsync(decimal.Parse(labelTotalInvoice.Text));
+            await task;
+            textBoxProductName.Focus();
         }
 
-        private void button4_Click(object sender, EventArgs e)
+        private async void button4_Click(object sender, EventArgs e)
         {
             if (DGVProducts.Rows.Count == 0)
             {
                 MessageBox.Show("الجدول فارغ");
                 return;
             }
-            if (AddPurchaseThread == null || AddPurchaseThread.ThreadState == ThreadState.Stopped)
-            {
-                state = "close";
-                AddPurchaseThread = new Thread(AddPurchases);
-                AddPurchaseThread.Start();
-                textBoxProductName.Focus();
-            }
 
+            Task task = AddPurchasesAsync(decimal.Parse(labelTotalInvoice.Text));
+            await task;
+            this.Close();
         }
     }
 }

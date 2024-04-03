@@ -1,4 +1,5 @@
 ﻿using APP2EFCore.Enums;
+using Microsoft.EntityFrameworkCore;
 
 namespace APP2EFCore.Forms
 {
@@ -22,14 +23,14 @@ namespace APP2EFCore.Forms
         }
         bool IsEmail(string email)
         {
-            return email.Contains("@");
+            return email.Contains('@');
         }
         bool IsPasswordConfirmed(string password, string passwordConfirm)
         {
             return password == passwordConfirm;
         }
 
-        private void button1_Click(object sender, EventArgs e)
+        private async void button1_Click(object sender, EventArgs e)
         {
             if (AreNull())
             {
@@ -51,30 +52,28 @@ namespace APP2EFCore.Forms
 
             if (!IsPasswordValid(textBoxPassword.Text))
             {
-                MessageBox.Show("كلمة المرور يجب ان تكون 8 محارف على الأقل!");
+                MessageBox.Show("كلمة المرور يجب ان تكون 8 محارف على الأقل");
                 return;
             }
 
-            using (AppDBContext db = new AppDBContext())
+            using AppDBContext db = new();
+            if (await db.Users.AnyAsync(x => x.Email == textBoxEmail.Text))
             {
-                if (db.Users.Any(x => x.Email == textBoxEmail.Text))
-                {
-                    MessageBox.Show("هذا البريد موجود بالفعل!");
-                    return;
-                }
-
-                User user = new User()
-                {
-                    Email = textBoxEmail.Text,
-                    Name = textBoxName.Text,
-                    Password = PasswordEncrypter.EncryptPassword(textBoxPassword.Text),
-                    Type = UserTypes.admin
-                };
-                db.Users.Add(user);
-                db.SaveChanges();
-                MessageBox.Show("تمت الإضافة بنجاح");
-                this.Close();
+                MessageBox.Show("هذا البريد موجود بالفعل!");
+                return;
             }
+
+            User user = new()
+            {
+                Email = textBoxEmail.Text,
+                Name = textBoxName.Text,
+                Password = PasswordEncrypter.EncryptPassword(textBoxPassword.Text),
+                Type = UserTypes.admin
+            };
+            await db.Users.AddAsync(user);
+            await db.SaveChangesAsync();
+            MessageBox.Show("تمت الإضافة بنجاح");
+            this.Close();
         }
     }
 }

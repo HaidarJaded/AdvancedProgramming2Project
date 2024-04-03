@@ -21,7 +21,7 @@ namespace APP2EFCore.Users
         }
         bool IsEmail(string email)
         {
-            return email.Contains("@");
+            return email.Contains('@');
         }
         bool IsPasswordConfirmed(string password, string passwordConfirm)
         {
@@ -66,15 +66,15 @@ namespace APP2EFCore.Users
 
             if (ValidateInfo())
             {
-                using (AppDBContext db = new AppDBContext())
-                {
+                using AppDBContext db = new ();
+                
                     if (db.Users.Any(x => x.Email == textBoxEmail.Text))
                     {
                         MessageBox.Show("هذا البريد موجود بالفعل!");
                         return;
                     }
 
-                    User user = new User()
+                    User user = new()
                     {
                         Email = textBoxEmail.Text,
                         Name = textBoxName.Text,
@@ -85,7 +85,7 @@ namespace APP2EFCore.Users
                     db.SaveChanges();
                     MessageBox.Show("تمت الإضافة بنجاح");
                     CleanPage();
-                }
+                
                 textBoxName.Focus();
             }
         }

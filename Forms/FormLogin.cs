@@ -1,17 +1,17 @@
 ﻿
 using APP2EFCore.Properties;
+using Microsoft.EntityFrameworkCore;
 
 namespace APP2EFCore.Forms;
 
 public partial class FormLogin : Form
 {
     public bool LogoutState { get; set; }
-    bool logoutState;
     public FormLogin()
     {
         InitializeComponent();
     }
-    private bool Login(string email, string password)
+    private async Task<bool> Login(string email, string password)
     {
         if (string.IsNullOrEmpty(email) || string.IsNullOrEmpty(password))
         {
@@ -19,50 +19,48 @@ public partial class FormLogin : Form
             return false;
         }
 
-        using (AppDBContext db = new AppDBContext())
+        using AppDBContext db = new();
+        User? user =await db.Users.FirstOrDefaultAsync(x => x.Email == email
+                                            && x.Password == PasswordEncrypter.EncryptPassword(password));
+
+        if (user is null)
         {
-            User? user = db.Users.FirstOrDefault(x => x.Email == email
-                                                && x.Password == PasswordEncrypter.EncryptPassword(password));
+            MessageBox.Show("المستخدم غير موجود أو المعلومات خاطئة!");
+            return false;
+        }
 
-            if (user is null)
-            {
-                MessageBox.Show("المستخدم غير موجود أو المعلومات خاطئة!");
-                return false;
-            }
+        MessageBox.Show("تم تسجيل الدخول بنجاح!");
 
-            MessageBox.Show("تم تسجيل الدخول بنجاح!");
+        Settings.Default.CurrentUserName = user.Name;
+        Settings.Default.CurrentUserEmail = user.Email;
+        Settings.Default.CurrentUserId = user.Id;
+        Settings.Default.CurrentUserType = user.Type.ToString();
 
-            Settings.Default.CurrentUserName = user.Name;
-            Settings.Default.CurrentUserEmail = user.Email;
-            Settings.Default.CurrentUserId = user.Id;
-            Settings.Default.CurrentUserType = user.Type.ToString();
-
-            FormMain formMain = new FormMain(this);
-            this.Visible = false;
-            formMain.ShowDialog();
-            if (!LogoutState)
-            {
-                this.Close();
-                return true;
-            }
-            this.Visible = true;
-
+        FormMain formMain = new(this);
+        this.Visible = false;
+        formMain.ShowDialog();
+        if (!LogoutState)
+        {
+            this.Close();
             return true;
         }
+        this.Visible = true;
+
+        return true;
     }
 
     private void FormLogin_Load(object sender, EventArgs e)
     {
-        AppDBContext db = new AppDBContext();
-        if (db.Users.Count() != 0)
+        using AppDBContext db = new();
+        if (db.Users.Any())
         {
             linkLabelCreateAccount.Visible = false;
         }
     }
 
-    private void button1_Click(object sender, EventArgs e)
+    private async void button1_Click(object sender, EventArgs e)
     {
-        if (Login(textBoxEmail.Text, textBoxPassword.Text))
+        if (await Login(textBoxEmail.Text, textBoxPassword.Text))
         {
             textBoxEmail.Text = "";
             textBoxPassword.Text = "";
@@ -70,12 +68,12 @@ public partial class FormLogin : Form
         }
     }
 
-    private void textBoxPassword_KeyPress(object sender, KeyPressEventArgs e)
+    private async void textBoxPassword_KeyPress(object sender, KeyPressEventArgs e)
     {
         if (e.KeyChar == (char)Keys.Enter)
         {
             e.Handled = true;
-            if (Login(textBoxEmail.Text, textBoxPassword.Text))
+            if (await Login(textBoxEmail.Text, textBoxPassword.Text))
             {
                 textBoxEmail.Text = "";
                 textBoxPassword.Text = "";
@@ -84,12 +82,12 @@ public partial class FormLogin : Form
         }
     }
 
-    private void linkLabelCreateAccount_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+    private void LinkLabelCreateAccount_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
     {
-      FormAddAdmin formAddAdmin = new FormAddAdmin();
+        FormAddAdmin formAddAdmin = new();
         formAddAdmin.ShowDialog();
-        AppDBContext db = new AppDBContext();
-        if (db.Users.Count() != 0)
+        using AppDBContext db = new();
+        if (db.Users.Any())
         {
             linkLabelCreateAccount.Visible = false;
         }

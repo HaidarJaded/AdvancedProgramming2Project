@@ -2,7 +2,7 @@
 {
     public partial class FormShowProducts : Form
     {
-        Category category;
+        readonly Category category;
         public FormShowProducts(Category category)
         {
             this.category = category;

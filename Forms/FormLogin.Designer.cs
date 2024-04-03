@@ -96,13 +96,13 @@
             linkLabelCreateAccount.TabIndex = 3;
             linkLabelCreateAccount.TabStop = true;
             linkLabelCreateAccount.Text = "انشاء حساب";
-            linkLabelCreateAccount.LinkClicked += linkLabelCreateAccount_LinkClicked;
+            linkLabelCreateAccount.LinkClicked += LinkLabelCreateAccount_LinkClicked;
             // 
             // FormLogin
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
-            BackColor = Color.Black;
+            BackColor = SystemColors.ButtonFace;
             ClientSize = new Size(363, 378);
             Controls.Add(linkLabelCreateAccount);
             Controls.Add(button1);

@@ -10,16 +10,15 @@ namespace APP2EFCore.Forms
             InitializeComponent();
         }
 
-        private void button1_Click(object sender, EventArgs e)
+        private async void button1_Click(object sender, EventArgs e)
         {
-            using (AppDBContext db = new AppDBContext())
-            {
-                Center? center = db.Centers.Find(1);
-                if (center == null) { return; }
-                center.ProfitRatio = numericProfitRatio.Value;
-                db.SaveChanges();
-                Settings.Default.ProfitRatio = numericProfitRatio.Value;
-            }
+            using AppDBContext db = new();
+
+             Center? center = await db.Centers.FindAsync(1);
+            if (center is null) { return; }
+            center.ProfitRatio = numericProfitRatio.Value;
+            await db.SaveChangesAsync();
+            Settings.Default.ProfitRatio = numericProfitRatio.Value;
             this.Close();
         }
     }

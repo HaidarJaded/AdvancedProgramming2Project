@@ -5,27 +5,29 @@ namespace APP2EFCore.Invoices
 {
     public partial class FormInvoiceInfo : Form
     {
-        Invoice invoice;
+        Invoice? invoice;
         public FormInvoiceInfo(int invoiceID)
         {
-            using (AppDBContext db = new AppDBContext())
-            {
-                this.invoice = db.Invoices
-                    .Include(i => i.Purchases)
-                    .ThenInclude(pu => pu.Product)
-                    .ThenInclude(p => p.Category)
-                    .Include(i => i.Sales)
-                    .ThenInclude(s => s.Product)
-                    .ThenInclude(p => p.Category)
-                    .Include(i=>i.Sales)
-                    .ThenInclude(s=>s.User)
-                    .FirstOrDefault(i => i.Id == invoiceID);
-            }
+            using AppDBContext db = new();
+
+            this.invoice = db.Invoices
+                .Include(i => i.Purchases)
+                .ThenInclude(pu => pu.Product)
+                .ThenInclude(p => p.Category)
+                .Include(i => i.Sales)
+                .ThenInclude(s => s.Product)
+                .ThenInclude(p => p.Category)
+                .Include(i => i.Sales)
+                .ThenInclude(s => s.User)
+                .FirstOrDefault(i => i.Id == invoiceID);
+
             InitializeComponent();
         }
 
+
         private void FormInvoiceInfo_Load(object sender, EventArgs e)
         {
+            if (invoice is null) return;
             if (invoice.Type == InvoiceType.sale)
             {
                 var sales = invoice.Sales.Select(s => new

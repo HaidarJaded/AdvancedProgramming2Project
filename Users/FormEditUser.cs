@@ -4,7 +4,7 @@
     {
         User user;
         AppDBContext db;
-        public FormEditUser(User user,AppDBContext db)
+        public FormEditUser(User user, AppDBContext db)
         {
             this.user = user;
             this.db = db;
@@ -12,7 +12,7 @@
         }
         bool IsEmail(string email)
         {
-            return email.Contains("@");
+            return email.Contains('@');
         }
         bool AreNull()
         {
@@ -38,6 +38,11 @@
             if (!IsEmail(textBoxEmail.Text))
             {
                 MessageBox.Show("يرجى كتابة بريد الكتروني صالح");
+                return;
+            }
+            if (user.Email != textBoxEmail.Text && db.Users.Any(u => u.Email == textBoxEmail.Text))
+            {
+                MessageBox.Show("عذرا هذا البريد الالكتروني مستخدم مسبقا");
                 return;
             }
             using (db)
