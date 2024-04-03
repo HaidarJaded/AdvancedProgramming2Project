@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "E:\\CSProjects\\AdvancedProgrammigEFCore\\APP2EFCore.csproj": {}
+    "E:\\CSProjects\\tasksTest\\AdvancedProgrammigEFCore\\APP2EFCore.csproj": {}
   },
   "projects": {
-    "E:\\CSProjects\\AdvancedProgrammigEFCore\\APP2EFCore.csproj": {
+    "E:\\CSProjects\\tasksTest\\AdvancedProgrammigEFCore\\APP2EFCore.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "E:\\CSProjects\\AdvancedProgrammigEFCore\\APP2EFCore.csproj",
+        "projectUniqueName": "E:\\CSProjects\\tasksTest\\AdvancedProgrammigEFCore\\APP2EFCore.csproj",
         "projectName": "APP2EFCore",
-        "projectPath": "E:\\CSProjects\\AdvancedProgrammigEFCore\\APP2EFCore.csproj",
+        "projectPath": "E:\\CSProjects\\tasksTest\\AdvancedProgrammigEFCore\\APP2EFCore.csproj",
         "packagesPath": "C:\\Users\\Administrator\\.nuget\\packages\\",
-        "outputPath": "E:\\CSProjects\\AdvancedProgrammigEFCore\\obj\\",
+        "outputPath": "E:\\CSProjects\\tasksTest\\AdvancedProgrammigEFCore\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files\\DevExpress 22.2\\Components\\Offline Packages",

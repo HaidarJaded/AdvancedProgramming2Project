@@ -1311,7 +1311,7 @@
             // 
             progressBarWait.Anchor = AnchorStyles.Bottom | AnchorStyles.Left;
             progressBarWait.Location = new Point(0, 495);
-            progressBarWait.MarqueeAnimationSpeed = 200;
+            progressBarWait.MarqueeAnimationSpeed = 50;
             progressBarWait.Name = "progressBarWait";
             progressBarWait.Size = new Size(153, 23);
             progressBarWait.Style = ProgressBarStyle.Marquee;
