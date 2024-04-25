@@ -14,22 +14,21 @@ namespace APP2EFCore.Forms
     public partial class FormMain : Form
     {
         PageState pageState;
-        FormLogin formLogin;
-        public FormMain(FormLogin formLogin)
+        public bool LogoutState { get; set; }
+
+        public FormMain()
         {
             InitializeComponent();
-            this.formLogin = formLogin;
         }
         private async Task ShowHomePageAsync()
         {
+            if (this.IsDisposed) return;
             progressBarWait.Visible = true;
 
             pageState = PageState.home;
 
             await Task.Run(async () =>
             {
-
-
                 using AppDBContext db = new();
                 decimal sumPurchasesPriceMonth = await db.Purchases.Where(x => x.Date.Month == DateTime.Now.Month).SumAsync(x => x.ProductsTotalPrice);
 
@@ -37,38 +36,38 @@ namespace APP2EFCore.Forms
 
                 int usersCount = await db.Users.Where(x => x.Type == UserTypes.casher).CountAsync();
 
-                Invoke(new Action(() =>
+                Invoke(new Action(async () =>
                 {
-                    UpdateLabel(labelHomePurchasesPrice, sumPurchasesPriceMonth, "ل.س");
-                    UpdateLabel(labelHomeSalesPrice, sumSalesPriceMonth, "ل.س");
-                    UpdateLabel(labelHomeCategoriesCount, db.Categories.Count());
-                    UpdateLabel(labelHomeProductsCount, db.Products.Count());
-                    UpdateLabel(labelHomeUsersCount, usersCount);
-
+                    await UpdateLabel(labelHomePurchasesPrice, sumPurchasesPriceMonth, "ل.س");
+                    await UpdateLabel(labelHomeSalesPrice, sumSalesPriceMonth, "ل.س");
+                    await UpdateLabel(labelHomeCategoriesCount, db.Categories.Count());
+                    await UpdateLabel(labelHomeProductsCount, db.Products.Count());
+                    await UpdateLabel(labelHomeUsersCount, usersCount);
                     progressBarWait.Visible = false;
                 }));
 
             });
         }
 
-        private void UpdateLabel(Label label, decimal value, string unit = "")
+        private Task UpdateLabel(Label label, decimal value, string unit = "")
         {
             label.Text = value + " " + unit;
+            return Task.CompletedTask;
         }
 
         private async Task ShowCategoriesPageAsync()
         {
             progressBarWait.Visible = true;
 
-            var categories = await Task.Run(() =>
+            var categories = await Task.Run(async () =>
             {
                 using AppDBContext db = new();
-                return db.Categories.Select(c => new
+                return await db.Categories.Select(c => new
                 {
                     c.Id,
                     c.Name,
                     c.ProductsCount
-                }).ToList();
+                }).OrderByDescending(c => c.Id).ToListAsync();
             });
 
             DGVCategories.DataSource = categories;
@@ -82,11 +81,11 @@ namespace APP2EFCore.Forms
         private async Task ShowSalesPageAsync()
         {
             progressBarWait.Visible = true;
-
-            var sales = await Task.Run(() =>
+            bool isAdmin = Settings.Default.CurrentUserType == UserTypes.admin.ToString();
+            var sales = await Task.Run(async () =>
             {
                 using AppDBContext db = new();
-                return db.Sales.Select(s => new
+                return await db.Sales.Where(s => isAdmin || s.User.Id == Settings.Default.CurrentUserId).Select(s => new
                 {
                     s.Id,
                     s.Product.Name,
@@ -97,7 +96,7 @@ namespace APP2EFCore.Forms
                     InvoiceId = s.Invoice.Id,
                     s.Date,
                     UserName = s.User.Name
-                }).ToList();
+                }).OrderByDescending(c => c.Date).ToListAsync();
             });
 
             DGVSales.DataSource = sales;
@@ -118,10 +117,10 @@ namespace APP2EFCore.Forms
         {
             progressBarWait.Visible = true;
 
-            List<object> purchases = await Task.Run(() =>
+            List<object> purchases = await Task.Run(async () =>
             {
                 using AppDBContext db = new();
-                return db.Purchases.Select(p => new
+                return await db.Purchases.Select(p => new
                 {
                     p.Id,
                     ProductName = p.Product.Name,
@@ -131,7 +130,7 @@ namespace APP2EFCore.Forms
                     p.ProductsTotalPrice,
                     InvoiceId = p.Invoice.Id,
                     p.Date
-                }).ToList<object>();
+                }).OrderByDescending(c => c.Date).ToListAsync<object>();
             });
 
             DGVPurchases.DataSource = purchases;
@@ -150,15 +149,15 @@ namespace APP2EFCore.Forms
         {
             progressBarWait.Visible = true;
 
-            var users = await Task.Run(() =>
+            var users = await Task.Run(async () =>
             {
                 using AppDBContext db = new();
-                return db.Users.Where(u => u.Type == UserTypes.casher).Select(u => new
+                return await db.Users.Where(u => u.Type == UserTypes.casher).Select(u => new
                 {
                     u.Id,
                     u.Name,
                     u.Email
-                }).ToList();
+                }).OrderByDescending(u => u.Id).ToListAsync();
             });
 
             DGVUsers.DataSource = users;
@@ -184,7 +183,7 @@ namespace APP2EFCore.Forms
                     CategoryName = p.Category.Name,
                     p.Price,
                     p.Count,
-                }).ToList();
+                }).OrderByDescending(p => p.Id).ToListAsync();
             });
 
             DGVProducts.DataSource = products;
@@ -202,14 +201,14 @@ namespace APP2EFCore.Forms
         {
             progressBarWait.Visible = true;
 
-            var users = await Task.Run(() =>
+            var users = await Task.Run(async () =>
             {
                 using AppDBContext db = new();
-                return db.Users.Where(u => u.Type == UserTypes.casher).Select(u => new
+                return await db.Users.Where(u => u.Type == UserTypes.casher).Select(u => new
                 {
                     u.Id,
                     u.Name,
-                }).ToList();
+                }).ToListAsync();
             });
 
             comboBoxUserName.DataSource = users;
@@ -274,16 +273,16 @@ namespace APP2EFCore.Forms
         {
             progressBarWait.Visible = true;
 
-            var invoices = await Task.Run(() =>
+            var invoices = await Task.Run(async () =>
             {
                 using AppDBContext db = new();
-                return db.Invoices.Select(i => new
+                return await db.Invoices.Select(i => new
                 {
                     i.Id,
                     i.Type,
                     i.Total,
                     i.Date
-                }).ToList();
+                }).OrderByDescending(i => i.Date).ToListAsync();
             });
 
             DGVInvoices.DataSource = invoices;
@@ -308,7 +307,7 @@ namespace APP2EFCore.Forms
             if (MessageBox.Show("هل حقا تريد حذف صنف " + category.Name + " ?\n لا يمكن استرجاع البيانات , سيتم حذف جميع البيانات المرتبطة", "اجراء حذف", MessageBoxButtons.YesNo, MessageBoxIcon.Warning) == DialogResult.Yes)
             {
                 db.Categories.Remove(category);
-                db.SaveChanges();
+                await db.SaveChangesAsync();
                 Task task = ShowCategoriesPageAsync();
                 await task;
             }
@@ -319,7 +318,6 @@ namespace APP2EFCore.Forms
             if (Settings.Default.CurrentUserType != UserTypes.admin.ToString())
             {
                 //Side bar
-                buttonSideSales.Visible = false;
                 buttonSidePurchases.Visible = false;
                 buttonSideUsers.Visible = false;
                 buttonSideReports.Visible = false;
@@ -335,9 +333,6 @@ namespace APP2EFCore.Forms
 
                 //Category page
                 panelCategoriesButtom.Visible = false;
-
-                //Sales page
-                panelSalesButtom.Visible = false;
 
                 //Settings page
                 panelSettingsProfitRatio.Visible = false;
@@ -647,7 +642,7 @@ namespace APP2EFCore.Forms
 
         private void button12_Click(object sender, EventArgs e)
         {
-            formLogin.LogoutState = true;
+            LogoutState = true;
             this.Close();
         }
     }

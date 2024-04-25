@@ -315,6 +315,7 @@
             Controls.Add(DGVProducts);
             Controls.Add(DGVSales);
             Controls.Add(panel1);
+            MaximizeBox = false;
             Name = "FormAddSales";
             RightToLeft = RightToLeft.Yes;
             Text = "عملية بيع";

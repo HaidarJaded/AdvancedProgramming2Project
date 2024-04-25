@@ -6,7 +6,6 @@ namespace APP2EFCore.Forms;
 
 public partial class FormLogin : Form
 {
-    public bool LogoutState { get; set; }
     public FormLogin()
     {
         InitializeComponent();
@@ -36,10 +35,10 @@ public partial class FormLogin : Form
         Settings.Default.CurrentUserId = user.Id;
         Settings.Default.CurrentUserType = user.Type.ToString();
 
-        FormMain formMain = new(this);
+        FormMain formMain = new();
         this.Visible = false;
         formMain.ShowDialog();
-        if (!LogoutState)
+        if (!formMain.LogoutState)
         {
             this.Close();
             return true;
