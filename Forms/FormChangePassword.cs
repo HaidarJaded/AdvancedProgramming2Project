@@ -1,4 +1,5 @@
-﻿using APP2EFCore.Properties;
+﻿using APP2EFCore.Helpers;
+using APP2EFCore.Properties;
 
 namespace APP2EFCore.Forms
 {

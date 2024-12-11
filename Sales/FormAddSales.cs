@@ -1,7 +1,11 @@
 ﻿using APP2EFCore.Enums;
+using APP2EFCore.Helpers;
+using APP2EFCore.Models;
 using APP2EFCore.Properties;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 using System.Data;
+using System.Drawing.Printing;
 
 namespace APP2EFCore.Sales
 {
@@ -12,26 +16,43 @@ namespace APP2EFCore.Sales
         {
             InitializeComponent();
         }
-        private async Task ShowProducts()
+        private async Task ShowProducts(string? search = null)
         {
-            var products = await Task.Run(async () =>
-            {
-                using AppDBContext db = new();
-                return await db.Products.Where(x => x.Count > 0).Select(x => new
-                {
-                    x.Id,
-                    x.Name,
-                    CategoryName = x.Category.Name,
-                    x.Count,
-                    x.Price,
-                }).ToListAsync();
-            });
+            using AppDBContext db = new();
+            var products = await db.Products
+             .Where(p => (string.IsNullOrEmpty(search) ||
+                          p.Name.Contains(search) ||
+                          p.Section.Name.Contains(search) ||
+                          p.Category.Name.Contains(search)) && p.Count > 0)
+             .Select(p => new
+             {
+                 p.Id,
+                 p.Name,
+                 CategoryName = p.Category.Name,
+                 p.Count,
+                 p.Price,
+                 SectionName = p.Section.Name,
+             })
+            .OrderByDescending(p => p.Id)
+             .ToListAsync();
+            //var products = await Task.Run(async () =>
+            //{
+
+            //    return await db.Products.Where(x => x.Count > 0).Select(x => new
+            //    {
+            //        x.Id,
+            //        x.Name,
+            //        CategoryName = x.Category.Name,
+            //        x.Count,
+            //        x.Price,
+            //    }).ToListAsync();
+            //});
 
             DGVProducts.Rows.Clear();
             foreach (var product in products)
             {
                 DGVProducts.Rows.Add(product.Id, product.Name, product.CategoryName
-                    , product.Count, product.Price);
+                    , product.Count, product.Price, product.SectionName);
             }
         }
 
@@ -43,7 +64,7 @@ namespace APP2EFCore.Sales
 
         async Task AddSale(int productId, int productCount, decimal productPrice, Invoice invoice, User user, AppDBContext db)
         {
-            Product? product = await db.Products.FindAsync(productId);
+            Product? product = await db.Products.Include(p => p.Category).FirstAsync(p => p.Id == productId);
             if (product == null) { return; }
             Sale sales = new Sale()
             {
@@ -56,6 +77,12 @@ namespace APP2EFCore.Sales
             };
             await db.Sales.AddAsync(sales);
             product.Count -= productCount;
+            if (product.Count <= product.Category.LowestNumber)
+            {
+                await db.MissingProducts.AddAsync(
+                    new MissingProduct()
+                    { Name = product.Name });
+            }
             await db.SaveChangesAsync();
         }
 
@@ -146,8 +173,16 @@ namespace APP2EFCore.Sales
 
         private async void FormAddSales_Load(object sender, EventArgs e)
         {
-            Task task = ShowProducts();
-            await task;
+            string currentLayout = LanguageSwitcher.GetCurrentKeyboardLayout();
+
+            if (currentLayout.Equals("4090409", StringComparison.OrdinalIgnoreCase)) // English US
+            {
+                labelLanguage.Text = "EN";
+            }
+            else
+            {
+                labelLanguage.Text = "AR";
+            }
         }
 
         private void DGVProducts_SelectionChanged(object sender, EventArgs e)
@@ -197,6 +232,85 @@ namespace APP2EFCore.Sales
             Task task = AddSaleProccess();
             await task;
             this.Close();
+        }
+
+        private async void textBoxSearchProducts_TextChanged(object sender, EventArgs e)
+        {
+            if (textBoxSearchProducts.Text.IsNullOrEmpty())
+            {
+                return;
+            }
+            await ShowProducts(textBoxSearchProducts.Text);
+        }
+
+        private void DGVProducts_CellDoubleClick(object sender, DataGridViewCellEventArgs e)
+        {
+            int availableProductCount = Convert.ToInt32(DGVProducts.CurrentRow.Cells[3].Value);
+            if (availableProductCount <= 0)
+            {
+                MessageBox.Show("لا يوجد المزيد!");
+                return;
+            }
+            string? productName = DGVProducts.CurrentRow.Cells[1].Value.ToString();
+            int productId = Convert.ToInt32(DGVProducts.CurrentRow.Cells[0].Value);
+            string? productCategoryName = DGVProducts.CurrentRow.Cells[2].Value.ToString();
+
+            int saledProductCount = Convert.ToInt32(numericProductCount.Value);
+            if (saledProductCount > availableProductCount) { saledProductCount = availableProductCount; }
+            int saledProductPrice = Convert.ToInt32(numericProductPrice.Value);
+            int totalPrice = saledProductCount * saledProductPrice;
+
+            //If product already exists in table 
+            foreach (DataGridViewRow row in DGVSales.Rows)
+            {
+                if (row.Cells[1].Value.ToString() == productName)
+                {
+                    int currentProductCount = Convert.ToInt32(row.Cells[3].Value);
+                    int currentTotalPrice = Convert.ToInt32(row.Cells[5].Value);
+
+                    currentProductCount += saledProductCount;
+                    row.Cells[3].Value = currentProductCount;
+                    row.Cells[4].Value = saledProductPrice;
+                    row.Cells[5].Value = currentTotalPrice + totalPrice;
+
+                    textBoxInvoiceTotalPrice.Text = (int.Parse(textBoxInvoiceTotalPrice.Text) + totalPrice).ToString();
+
+                    UpdateProductCount(availableProductCount - saledProductCount);
+                    numericProductCount.Value = numericProductCount.Minimum;
+                    numericProductCount.Maximum = Math.Max(1, numericProductCount.Maximum - saledProductCount);
+                    numericProductCount.Value = numericProductCount.Minimum;
+                    return;
+                }
+            }
+
+            //If product does not exists in table 
+
+            DGVSales.Rows.Add(new object[] { productId, productName, productCategoryName, saledProductCount, saledProductPrice, totalPrice });
+            textBoxInvoiceTotalPrice.Text = (int.Parse(textBoxInvoiceTotalPrice.Text) + totalPrice).ToString();
+
+            UpdateProductCount(availableProductCount - saledProductCount);
+        }
+
+        private void labelLanguage_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        {
+            string currentLayout = LanguageSwitcher.GetCurrentKeyboardLayout();
+            string newLayout;
+
+            // Check the current layout and toggle accordingly
+            if (currentLayout.Equals("4090409", StringComparison.OrdinalIgnoreCase)) // English US
+            {
+                labelLanguage.Text = "AR";
+                newLayout = "00000401"; // Change it to Arabic (Saudi Arabia)
+            }
+            else
+            {
+                labelLanguage.Text = "EN";
+                newLayout = "00000409"; // Change it to English (US)
+            }
+
+            // Change the keyboard layout
+            LanguageSwitcher.ChangeKeyboardLayout(newLayout);
+            textBoxSearchProducts.Focus();
         }
     }
 }

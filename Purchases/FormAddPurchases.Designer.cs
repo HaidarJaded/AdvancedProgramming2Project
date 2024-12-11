@@ -35,10 +35,12 @@
             button1 = new Button();
             linkLabel1 = new LinkLabel();
             comboBoxProductCategory = new ComboBox();
+            numericProductPurchasePrice = new NumericUpDown();
             numericProductPrice = new NumericUpDown();
             numericProductCount = new NumericUpDown();
             label3 = new Label();
             label5 = new Label();
+            label6 = new Label();
             labelTotalInvoice = new Label();
             label4 = new Label();
             label2 = new Label();
@@ -48,10 +50,12 @@
             ProductName = new DataGridViewTextBoxColumn();
             Category = new DataGridViewTextBoxColumn();
             ProductCount = new DataGridViewTextBoxColumn();
+            PurchasePrice = new DataGridViewTextBoxColumn();
             ProductPrice = new DataGridViewTextBoxColumn();
             ProductsTotalPrice = new DataGridViewTextBoxColumn();
             CategoryId = new DataGridViewTextBoxColumn();
             panel1.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)numericProductPurchasePrice).BeginInit();
             ((System.ComponentModel.ISupportInitialize)numericProductPrice).BeginInit();
             ((System.ComponentModel.ISupportInitialize)numericProductCount).BeginInit();
             ((System.ComponentModel.ISupportInitialize)DGVProducts).BeginInit();
@@ -66,10 +70,12 @@
             panel1.Controls.Add(button1);
             panel1.Controls.Add(linkLabel1);
             panel1.Controls.Add(comboBoxProductCategory);
+            panel1.Controls.Add(numericProductPurchasePrice);
             panel1.Controls.Add(numericProductPrice);
             panel1.Controls.Add(numericProductCount);
             panel1.Controls.Add(label3);
             panel1.Controls.Add(label5);
+            panel1.Controls.Add(label6);
             panel1.Controls.Add(labelTotalInvoice);
             panel1.Controls.Add(label4);
             panel1.Controls.Add(label2);
@@ -144,9 +150,20 @@
             comboBoxProductCategory.Size = new Size(121, 23);
             comboBoxProductCategory.TabIndex = 1;
             // 
+            // numericProductPurchasePrice
+            // 
+            numericProductPurchasePrice.Location = new Point(147, 3);
+            numericProductPurchasePrice.Maximum = new decimal(new int[] { -559939585, 902409669, 54, 0 });
+            numericProductPurchasePrice.Minimum = new decimal(new int[] { 1, 0, 0, 0 });
+            numericProductPurchasePrice.Name = "numericProductPurchasePrice";
+            numericProductPurchasePrice.Size = new Size(120, 23);
+            numericProductPurchasePrice.TabIndex = 2;
+            numericProductPurchasePrice.TextAlign = HorizontalAlignment.Center;
+            numericProductPurchasePrice.Value = new decimal(new int[] { 1, 0, 0, 0 });
+            // 
             // numericProductPrice
             // 
-            numericProductPrice.Location = new Point(145, 15);
+            numericProductPrice.Location = new Point(147, 33);
             numericProductPrice.Maximum = new decimal(new int[] { -559939585, 902409669, 54, 0 });
             numericProductPrice.Minimum = new decimal(new int[] { 1, 0, 0, 0 });
             numericProductPrice.Name = "numericProductPrice";
@@ -186,6 +203,16 @@
             label5.TabIndex = 1;
             label5.Text = "الفاتورة الاجمالية:";
             // 
+            // label6
+            // 
+            label6.AutoSize = true;
+            label6.Font = new Font("MS Reference Sans Serif", 10F);
+            label6.Location = new Point(273, 34);
+            label6.Name = "label6";
+            label6.Size = new Size(61, 18);
+            label6.TabIndex = 1;
+            label6.Text = "سعر المبيع:";
+            // 
             // labelTotalInvoice
             // 
             labelTotalInvoice.AutoSize = true;
@@ -199,12 +226,12 @@
             // label4
             // 
             label4.AutoSize = true;
-            label4.Font = new Font("MS Reference Sans Serif", 15F);
-            label4.Location = new Point(277, 12);
+            label4.Font = new Font("MS Reference Sans Serif", 10F);
+            label4.Location = new Point(273, 4);
             label4.Name = "label4";
-            label4.Size = new Size(58, 26);
+            label4.Size = new Size(68, 18);
             label4.TabIndex = 1;
-            label4.Text = "السعر:";
+            label4.Text = "سعر الشراء:";
             // 
             // label2
             // 
@@ -228,10 +255,12 @@
             // 
             // textBoxProductName
             // 
+            textBoxProductName.AutoCompleteMode = AutoCompleteMode.Suggest;
             textBoxProductName.Location = new Point(580, 15);
             textBoxProductName.Name = "textBoxProductName";
             textBoxProductName.Size = new Size(120, 23);
             textBoxProductName.TabIndex = 0;
+            textBoxProductName.TextChanged += textBoxProductName_TextChanged;
             // 
             // DGVProducts
             // 
@@ -240,7 +269,7 @@
             DGVProducts.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
             DGVProducts.BackgroundColor = Color.White;
             DGVProducts.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            DGVProducts.Columns.AddRange(new DataGridViewColumn[] { ProductName, Category, ProductCount, ProductPrice, ProductsTotalPrice, CategoryId });
+            DGVProducts.Columns.AddRange(new DataGridViewColumn[] { ProductName, Category, ProductCount, PurchasePrice, ProductPrice, ProductsTotalPrice, CategoryId });
             DGVProducts.Dock = DockStyle.Fill;
             DGVProducts.Location = new Point(0, 104);
             DGVProducts.Name = "DGVProducts";
@@ -266,9 +295,15 @@
             ProductCount.Name = "ProductCount";
             ProductCount.ReadOnly = true;
             // 
+            // PurchasePrice
+            // 
+            PurchasePrice.HeaderText = "سعر الشراء";
+            PurchasePrice.Name = "PurchasePrice";
+            PurchasePrice.ReadOnly = true;
+            // 
             // ProductPrice
             // 
-            ProductPrice.HeaderText = "السعر الفردي";
+            ProductPrice.HeaderText = "سعر المبيع";
             ProductPrice.Name = "ProductPrice";
             ProductPrice.ReadOnly = true;
             // 
@@ -300,8 +335,10 @@
             StartPosition = FormStartPosition.CenterParent;
             Text = "اضافة عملية شراء";
             Activated += FormAddPurchases_Activated;
+            Load += FormAddPurchases_Load;
             panel1.ResumeLayout(false);
             panel1.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)numericProductPurchasePrice).EndInit();
             ((System.ComponentModel.ISupportInitialize)numericProductPrice).EndInit();
             ((System.ComponentModel.ISupportInitialize)numericProductCount).EndInit();
             ((System.ComponentModel.ISupportInitialize)DGVProducts).EndInit();
@@ -327,9 +364,12 @@
         private Button button1;
         private LinkLabel linkLabel1;
         private Label labelTotalInvoice;
+        private NumericUpDown numericProductPurchasePrice;
+        private Label label6;
         private DataGridViewTextBoxColumn ProductName;
         private DataGridViewTextBoxColumn Category;
         private DataGridViewTextBoxColumn ProductCount;
+        private DataGridViewTextBoxColumn PurchasePrice;
         private DataGridViewTextBoxColumn ProductPrice;
         private DataGridViewTextBoxColumn ProductsTotalPrice;
         private DataGridViewTextBoxColumn CategoryId;

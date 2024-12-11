@@ -35,12 +35,14 @@
             numericProductPrice = new NumericUpDown();
             label3 = new Label();
             button1 = new Button();
+            label4 = new Label();
+            comboBoxProductSection = new ComboBox();
             ((System.ComponentModel.ISupportInitialize)numericProductPrice).BeginInit();
             SuspendLayout();
             // 
             // textBoxName
             // 
-            textBoxName.Location = new Point(91, 114);
+            textBoxName.Location = new Point(91, 62);
             textBoxName.Name = "textBoxName";
             textBoxName.Size = new Size(170, 23);
             textBoxName.TabIndex = 0;
@@ -48,7 +50,7 @@
             // label1
             // 
             label1.AutoSize = true;
-            label1.Location = new Point(202, 77);
+            label1.Location = new Point(202, 25);
             label1.Name = "label1";
             label1.Size = new Size(59, 15);
             label1.TabIndex = 1;
@@ -58,7 +60,7 @@
             // 
             comboBoxProductCategory.DropDownStyle = ComboBoxStyle.DropDownList;
             comboBoxProductCategory.FormattingEnabled = true;
-            comboBoxProductCategory.Location = new Point(91, 196);
+            comboBoxProductCategory.Location = new Point(91, 144);
             comboBoxProductCategory.Name = "comboBoxProductCategory";
             comboBoxProductCategory.Size = new Size(170, 23);
             comboBoxProductCategory.TabIndex = 2;
@@ -66,7 +68,7 @@
             // label2
             // 
             label2.AutoSize = true;
-            label2.Location = new Point(219, 159);
+            label2.Location = new Point(219, 107);
             label2.Name = "label2";
             label2.Size = new Size(42, 15);
             label2.TabIndex = 1;
@@ -101,6 +103,24 @@
             button1.UseVisualStyleBackColor = true;
             button1.Click += button1_Click;
             // 
+            // label4
+            // 
+            label4.AutoSize = true;
+            label4.Location = new Point(219, 178);
+            label4.Name = "label4";
+            label4.Size = new Size(37, 15);
+            label4.TabIndex = 1;
+            label4.Text = "القسم";
+            // 
+            // comboBoxProductSection
+            // 
+            comboBoxProductSection.DropDownStyle = ComboBoxStyle.DropDownList;
+            comboBoxProductSection.FormattingEnabled = true;
+            comboBoxProductSection.Location = new Point(91, 215);
+            comboBoxProductSection.Name = "comboBoxProductSection";
+            comboBoxProductSection.Size = new Size(170, 23);
+            comboBoxProductSection.TabIndex = 2;
+            // 
             // FormEditProduct
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
@@ -108,7 +128,9 @@
             ClientSize = new Size(353, 423);
             Controls.Add(button1);
             Controls.Add(numericProductPrice);
+            Controls.Add(comboBoxProductSection);
             Controls.Add(comboBoxProductCategory);
+            Controls.Add(label4);
             Controls.Add(label3);
             Controls.Add(label2);
             Controls.Add(label1);
@@ -136,5 +158,7 @@
         private NumericUpDown numericProductPrice;
         private Label label3;
         private Button button1;
+        private Label label4;
+        private ComboBox comboBoxProductSection;
     }
 }

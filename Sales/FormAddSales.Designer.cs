@@ -54,11 +54,17 @@
             ProductCategoryRight = new DataGridViewTextBoxColumn();
             ProductCountRight = new DataGridViewTextBoxColumn();
             ProductPriceRight = new DataGridViewTextBoxColumn();
+            ProductSectionRight = new DataGridViewTextBoxColumn();
+            panelContainerRight = new Panel();
+            labelLanguage = new LinkLabel();
+            label5 = new Label();
+            textBoxSearchProducts = new TextBox();
             panel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)numericProductCount).BeginInit();
             ((System.ComponentModel.ISupportInitialize)numericProductPrice).BeginInit();
             ((System.ComponentModel.ISupportInitialize)DGVSales).BeginInit();
             ((System.ComponentModel.ISupportInitialize)DGVProducts).BeginInit();
+            panelContainerRight.SuspendLayout();
             SuspendLayout();
             // 
             // panel1
@@ -78,7 +84,7 @@
             panel1.Dock = DockStyle.Top;
             panel1.Location = new Point(0, 0);
             panel1.Name = "panel1";
-            panel1.Size = new Size(800, 93);
+            panel1.Size = new Size(1038, 93);
             panel1.TabIndex = 0;
             // 
             // numericProductCount
@@ -215,7 +221,7 @@
             DGVSales.MultiSelect = false;
             DGVSales.Name = "DGVSales";
             DGVSales.ReadOnly = true;
-            DGVSales.Size = new Size(611, 357);
+            DGVSales.Size = new Size(611, 411);
             DGVSales.TabIndex = 1;
             // 
             // ProducId
@@ -262,14 +268,15 @@
             DGVProducts.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
             DGVProducts.BackgroundColor = Color.White;
             DGVProducts.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            DGVProducts.Columns.AddRange(new DataGridViewColumn[] { ProductId, ProductNameRight, ProductCategoryRight, ProductCountRight, ProductPriceRight });
-            DGVProducts.Dock = DockStyle.Right;
-            DGVProducts.Location = new Point(617, 93);
+            DGVProducts.Columns.AddRange(new DataGridViewColumn[] { ProductId, ProductNameRight, ProductCategoryRight, ProductCountRight, ProductPriceRight, ProductSectionRight });
+            DGVProducts.Dock = DockStyle.Bottom;
+            DGVProducts.Location = new Point(0, 86);
             DGVProducts.MultiSelect = false;
             DGVProducts.Name = "DGVProducts";
             DGVProducts.ReadOnly = true;
-            DGVProducts.Size = new Size(183, 357);
+            DGVProducts.Size = new Size(421, 325);
             DGVProducts.TabIndex = 2;
+            DGVProducts.CellDoubleClick += DGVProducts_CellDoubleClick;
             DGVProducts.SelectionChanged += DGVProducts_SelectionChanged;
             // 
             // ProductId
@@ -281,6 +288,7 @@
             // 
             // ProductNameRight
             // 
+            ProductNameRight.FillWeight = 152.284271F;
             ProductNameRight.HeaderText = "اسم المنتج";
             ProductNameRight.Name = "ProductNameRight";
             ProductNameRight.ReadOnly = true;
@@ -306,13 +314,60 @@
             ProductPriceRight.ReadOnly = true;
             ProductPriceRight.Visible = false;
             // 
+            // ProductSectionRight
+            // 
+            ProductSectionRight.FillWeight = 47.71573F;
+            ProductSectionRight.HeaderText = "القسم";
+            ProductSectionRight.Name = "ProductSectionRight";
+            ProductSectionRight.ReadOnly = true;
+            // 
+            // panelContainerRight
+            // 
+            panelContainerRight.Controls.Add(labelLanguage);
+            panelContainerRight.Controls.Add(label5);
+            panelContainerRight.Controls.Add(textBoxSearchProducts);
+            panelContainerRight.Controls.Add(DGVProducts);
+            panelContainerRight.Dock = DockStyle.Right;
+            panelContainerRight.Location = new Point(617, 93);
+            panelContainerRight.Name = "panelContainerRight";
+            panelContainerRight.Size = new Size(421, 411);
+            panelContainerRight.TabIndex = 3;
+            // 
+            // labelLanguage
+            // 
+            labelLanguage.AutoSize = true;
+            labelLanguage.Location = new Point(3, 29);
+            labelLanguage.Name = "labelLanguage";
+            labelLanguage.Size = new Size(22, 15);
+            labelLanguage.TabIndex = 5;
+            labelLanguage.TabStop = true;
+            labelLanguage.Text = "EN";
+            labelLanguage.LinkClicked += labelLanguage_LinkClicked;
+            // 
+            // label5
+            // 
+            label5.AutoSize = true;
+            label5.Location = new Point(150, 6);
+            label5.Name = "label5";
+            label5.Size = new Size(36, 15);
+            label5.TabIndex = 4;
+            label5.Text = "البحث";
+            // 
+            // textBoxSearchProducts
+            // 
+            textBoxSearchProducts.Location = new Point(3, 3);
+            textBoxSearchProducts.Name = "textBoxSearchProducts";
+            textBoxSearchProducts.Size = new Size(129, 23);
+            textBoxSearchProducts.TabIndex = 3;
+            textBoxSearchProducts.TextChanged += textBoxSearchProducts_TextChanged;
+            // 
             // FormAddSales
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             BackColor = Color.White;
-            ClientSize = new Size(800, 450);
-            Controls.Add(DGVProducts);
+            ClientSize = new Size(1038, 504);
+            Controls.Add(panelContainerRight);
             Controls.Add(DGVSales);
             Controls.Add(panel1);
             MaximizeBox = false;
@@ -326,6 +381,8 @@
             ((System.ComponentModel.ISupportInitialize)numericProductPrice).EndInit();
             ((System.ComponentModel.ISupportInitialize)DGVSales).EndInit();
             ((System.ComponentModel.ISupportInitialize)DGVProducts).EndInit();
+            panelContainerRight.ResumeLayout(false);
+            panelContainerRight.PerformLayout();
             ResumeLayout(false);
         }
 
@@ -346,6 +403,9 @@
         private Button button1;
         private Label label4;
         private Label label3;
+        private Panel panelContainerRight;
+        private Label label5;
+        private TextBox textBoxSearchProducts;
         private DataGridViewTextBoxColumn ProducId;
         private DataGridViewTextBoxColumn ProductName;
         private DataGridViewTextBoxColumn ProductCategory;
@@ -357,5 +417,7 @@
         private DataGridViewTextBoxColumn ProductCategoryRight;
         private DataGridViewTextBoxColumn ProductCountRight;
         private DataGridViewTextBoxColumn ProductPriceRight;
+        private DataGridViewTextBoxColumn ProductSectionRight;
+        private LinkLabel labelLanguage;
     }
 }

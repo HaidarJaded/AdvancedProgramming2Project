@@ -1,13 +1,19 @@
 ﻿using APP2EFCore.Categories;
 using APP2EFCore.Enums;
+using APP2EFCore.Helpers;
 using APP2EFCore.Invoices;
+using APP2EFCore.MissingProducts;
+using APP2EFCore.Models;
 using APP2EFCore.Products;
 using APP2EFCore.Properties;
 using APP2EFCore.Purchases;
 using APP2EFCore.Sales;
+using APP2EFCore.Sections;
 using APP2EFCore.Users;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 using System.Data;
+using System.Drawing.Printing;
 
 namespace APP2EFCore.Forms
 {
@@ -15,9 +21,14 @@ namespace APP2EFCore.Forms
     {
         PageState pageState;
         public bool LogoutState { get; set; }
-
+        int productsPageSize;
+        int productsCurrentPage;
+        int productsTotalPages;
+        string productsSearch;
         public FormMain()
         {
+            this.productsCurrentPage = 1;
+            this.productsPageSize = 20;
             InitializeComponent();
         }
         private async Task ShowHomePageAsync()
@@ -54,6 +65,26 @@ namespace APP2EFCore.Forms
             label.Text = value + " " + unit;
             return Task.CompletedTask;
         }
+        private async Task ShowMissingProductsPageAsync()
+        {
+            progressBarWait.Visible = true;
+
+            var missingProducts = await Task.Run(async () =>
+            {
+                using AppDBContext db = new();
+                return await db.MissingProducts.Select(c => new
+                {
+                    c.Id,
+                    c.Name,
+                }).OrderByDescending(c => c.Id).ToListAsync();
+            });
+
+            DGVMissingProducts.DataSource = missingProducts;
+            DGVMissingProducts.Columns["Id"].Visible = false;
+            DGVMissingProducts.Columns["Name"].HeaderText = "اسم المنتج";
+
+            progressBarWait.Visible = false;
+        }
 
         private async Task ShowCategoriesPageAsync()
         {
@@ -82,10 +113,14 @@ namespace APP2EFCore.Forms
         {
             progressBarWait.Visible = true;
             bool isAdmin = Settings.Default.CurrentUserType == UserTypes.admin.ToString();
+            DateTime startDate = dateTimePickerSalesFrom.Value.Date;
+            DateTime endDate = dateTimePickerSalesTo.Value.Date;
             var sales = await Task.Run(async () =>
             {
                 using AppDBContext db = new();
-                return await db.Sales.Where(s => isAdmin || s.User.Id == Settings.Default.CurrentUserId).Select(s => new
+                return await db.Sales
+                .Where(s => (isAdmin || s.User.Id == Settings.Default.CurrentUserId)
+                && s.Date.Date >= startDate && s.Date.Date <= endDate).Select(s => new
                 {
                     s.Id,
                     s.Product.Name,
@@ -98,6 +133,7 @@ namespace APP2EFCore.Forms
                     UserName = s.User.Name
                 }).OrderByDescending(c => c.Date).ToListAsync();
             });
+            textBoxSalesTotalPrice.Text = sales.Sum(s => s.ProductsTotalPrice).ToString();
 
             DGVSales.DataSource = sales;
             DGVSales.Columns[0].Visible = false;
@@ -134,14 +170,17 @@ namespace APP2EFCore.Forms
             });
 
             DGVPurchases.DataSource = purchases;
-            DGVPurchases.Columns[0].Visible = false;
-            DGVPurchases.Columns[1].HeaderText = "اسم المنتج";
-            DGVPurchases.Columns[2].HeaderText = "الصنف";
-            DGVPurchases.Columns[3].HeaderText = "الكمية";
-            DGVPurchases.Columns[4].HeaderText = "سعر المنتج";
-            DGVPurchases.Columns[5].HeaderText = "السعر الاجمالي";
-            DGVPurchases.Columns[6].HeaderText = "رقم الفاتورة";
-            DGVPurchases.Columns[7].HeaderText = "تاريخ الشراء";
+            if (DGVPurchases.ColumnCount > 0)
+            {
+                DGVPurchases.Columns[0].Visible = false;
+                DGVPurchases.Columns[1].HeaderText = "اسم المنتج";
+                DGVPurchases.Columns[2].HeaderText = "الصنف";
+                DGVPurchases.Columns[3].HeaderText = "الكمية";
+                DGVPurchases.Columns[4].HeaderText = "سعر المنتج";
+                DGVPurchases.Columns[5].HeaderText = "السعر الاجمالي";
+                DGVPurchases.Columns[6].HeaderText = "رقم الفاتورة";
+                DGVPurchases.Columns[7].HeaderText = "تاريخ الشراء";
+            }
             progressBarWait.Visible = false;
         }
 
@@ -169,29 +208,52 @@ namespace APP2EFCore.Forms
 
         }
 
-        private async Task ShowProductsPageAsync()
+        private async Task ShowProductsPageAsync(int pageNumber = 1, int pageSize = 20, string? search = null)
         {
             progressBarWait.Visible = true;
 
-            var products = await Task.Run(() =>
+            using (var db = new AppDBContext())
             {
-                using AppDBContext db = new();
-                return db.Products.Select(p => new
-                {
-                    p.Id,
-                    p.Name,
-                    CategoryName = p.Category.Name,
-                    p.Price,
-                    p.Count,
-                }).OrderByDescending(p => p.Id).ToListAsync();
-            });
+                var totalCount = await db.Products
+                  .Where(p => string.IsNullOrEmpty(search) ||
+                               p.Name.Contains(search) ||
+                               p.Section.Name.Contains(search) ||
+                               p.Category.Name.Contains(search))
+                  .CountAsync();
+                productsTotalPages = (int)Math.Ceiling((double)totalCount / productsPageSize);
+                var products = await db.Products
+                    .Where(p => string.IsNullOrEmpty(search) ||
+                                 p.Name.Contains(search) ||
+                                 p.Section.Name.Contains(search) ||
+                                 p.Category.Name.Contains(search))
+                    .Select(p => new
+                    {
+                        p.Id,
+                        p.Name,
+                        CategoryName = p.Category.Name,
+                        p.PurchasePrice,
+                        p.Price,
+                        p.Count,
+                        SectionName = p.Section.Name,
+                    })
+                    .OrderByDescending(p => p.Id)
+                    .Skip((pageNumber - 1) * pageSize)
+                    .Take(pageSize)
+                    .ToListAsync();
 
-            DGVProducts.DataSource = products;
+                DGVProducts.DataSource = products;
+
+            }
+            this.productsPageSize = pageSize;
+            this.productsCurrentPage = pageNumber;
+            UpdateProductsPaginationControls();
             DGVProducts.Columns[0].Visible = false;
             DGVProducts.Columns[1].HeaderText = "اسم المنتج";
             DGVProducts.Columns[2].HeaderText = "الصنف";
-            DGVProducts.Columns[3].HeaderText = "السعر";
-            DGVProducts.Columns[4].HeaderText = "الكمية";
+            DGVProducts.Columns[3].HeaderText = "سعر الشراء";
+            DGVProducts.Columns[4].HeaderText = "سعر المبيع";
+            DGVProducts.Columns[5].HeaderText = "الكمية";
+            DGVProducts.Columns[6].HeaderText = "القسم";
 
             progressBarWait.Visible = false;
 
@@ -290,6 +352,24 @@ namespace APP2EFCore.Forms
             progressBarWait.Visible = false;
         }
 
+        private async Task ShowSectinsPageAsync()
+        {
+            progressBarWait.Visible = true;
+
+            var sections = await Task.Run(async () =>
+            {
+                using AppDBContext db = new();
+                return await db.Sections.Select(s => new
+                {
+                    s.Id,
+                    s.Name,
+                }).ToListAsync();
+            });
+
+            DGVSections.DataSource = sections;
+
+            progressBarWait.Visible = false;
+        }
 
         private void timer1_Tick(object sender, EventArgs e)
         {
@@ -318,30 +398,33 @@ namespace APP2EFCore.Forms
             if (Settings.Default.CurrentUserType != UserTypes.admin.ToString())
             {
                 //Side bar
-                buttonSidePurchases.Visible = false;
-                buttonSideUsers.Visible = false;
-                buttonSideReports.Visible = false;
-                buttonSideInvoices.Visible = false;
+                buttonSidePurchases.Hide();
+                buttonSideUsers.Hide();
+                buttonSideReports.Hide();
+                buttonSideInvoices.Hide();
 
                 //Home page
-                panelHomeUsersCount.Visible = false;
-                panelHomePurchasesPrice.Visible = false;
-                panelHomeSalesPrice.Visible = false;
-                buttonHomeCategory.Visible = false;
-                buttonHomeUser.Visible = false;
-                buttonHomePurchase.Visible = false;
+                panelHomeUsersCount.Hide();
+                panelHomePurchasesPrice.Hide();
+                panelHomeSalesPrice.Hide();
+                buttonHomeCategory.Hide();
+                buttonHomeUser.Hide();
+                buttonHomePurchase.Hide();
 
                 //Category page
-                panelCategoriesButtom.Visible = false;
+                panelCategoriesButtom.Hide();
 
                 //Settings page
-                panelSettingsProfitRatio.Visible = false;
+                panelSettingsProfitRatio.Hide();
+
+                //Products page
+                button6.Hide();
 
             }
             else
             {
                 //Home page
-                buttonHomeSale.Visible = false;
+                buttonHomeSale.Hide();
 
             }
             string userName = Settings.Default.CurrentUserName;
@@ -427,21 +510,25 @@ namespace APP2EFCore.Forms
             Category? category = await db.Categories.Include(c => c.Products)
                                 .FirstOrDefaultAsync(c => c.Id == categoryId);
             if (category == null) { return; }
-            FormShowProducts formShowProducts = new(category);
+            Categories.FormShowProducts formShowProducts = new(category);
             formShowProducts.ShowDialog();
         }
 
         private async void buttonSideProducts_Click(object sender, EventArgs e)
         {
             if (pageState == PageState.products) return;
-
             panelProducts.BringToFront();
             pageState = PageState.products;
             this.Text = "المنتجات";
             Task task = ShowProductsPageAsync();
             await task;
         }
-
+        private void UpdateProductsPaginationControls()
+        {
+            buttonProductsPrevious.Enabled = productsCurrentPage > 1;
+            buttonProductsNext.Enabled = productsCurrentPage < productsTotalPages;
+            labelCurrentProductsPage.Text = $"الصفحة {productsCurrentPage} من {productsTotalPages}";
+        }
         private async void buttonSideUsers_Click(object sender, EventArgs e)
         {
             if (pageState == PageState.user) return;
@@ -503,14 +590,12 @@ namespace APP2EFCore.Forms
             using AppDBContext db = new();
 
             int productId = Convert.ToInt32(DGVProducts.CurrentRow.Cells[0].Value);
-            Product? product = await db.Products.Include(p => p.Category)
+            Product? product = await db.Products.Include(p => p.Category).Include(p => p.Section)
                             .FirstOrDefaultAsync(p => p.Id == productId);
             if (product is null) return;
             FormEditProduct formEditProduct = new(product);
             formEditProduct.ShowDialog();
 
-            Task task = ShowProductsPageAsync();
-            await task;
         }
 
         private async void buttonSideReports_Click(object sender, EventArgs e)
@@ -582,7 +667,7 @@ namespace APP2EFCore.Forms
 
         private async void buttonHomeCategory_Click(object sender, EventArgs e)
         {
-            FormAddCategory formAddCategory = new();
+            FormAddMissingProduct formAddCategory = new();
             formAddCategory.ShowDialog();
 
             Task task = ShowHomePageAsync();
@@ -644,6 +729,135 @@ namespace APP2EFCore.Forms
         {
             LogoutState = true;
             this.Close();
+        }
+
+        private async void buttonSideSections_Click(object sender, EventArgs e)
+        {
+            if (pageState == PageState.sections) return;
+
+            panelSections.BringToFront();
+            pageState = PageState.sections;
+            this.Text = "الأقسام";
+            Task task = ShowSectinsPageAsync();
+            await task;
+        }
+
+        private async void button13_Click(object sender, EventArgs e)
+        {
+            FormAddSection formAddSection = new();
+            formAddSection.ShowDialog();
+
+            Task task = ShowSectinsPageAsync();
+            await task;
+        }
+
+        private async void button15_Click(object sender, EventArgs e)
+        {
+            if (DGVSections.CurrentRow is null) return;
+
+            using AppDBContext db = new();
+            int sectionId = Convert.ToInt32(DGVSections.CurrentRow.Cells[0].Value);
+            Section? section = await db.Sections.Include(s => s.Products).ThenInclude(p => p.Category)
+                                .FirstOrDefaultAsync(s => s.Id == sectionId);
+            if (section == null) { return; }
+            Sections.FormShowProducts formShowProducts = new(section);
+            formShowProducts.ShowDialog();
+        }
+
+        private async void buttonProductsPrevious_Click(object sender, EventArgs e)
+        {
+            if (productsCurrentPage > 1)
+            {
+                await ShowProductsPageAsync(--productsCurrentPage, search: productsSearch);
+            }
+        }
+
+        private async void buttonProductsNext_Click(object sender, EventArgs e)
+        {
+            if (productsCurrentPage < productsTotalPages)
+            {
+                await ShowProductsPageAsync(++productsCurrentPage, search: productsSearch);
+            }
+        }
+
+        private async void textBoxProductsSearch_TextChanged(object sender, EventArgs e)
+        {
+            productsSearch = textBoxProductsSearch.Text;
+            if (textBoxProductsSearch.Text.IsNullOrEmpty())
+            {
+                await ShowProductsPageAsync();
+                return;
+            }
+            await ShowProductsPageAsync(search: textBoxProductsSearch.Text);
+        }
+
+        private async void button14_Click(object sender, EventArgs e)
+        {
+
+            if (DGVSales.CurrentRow is null) return;
+            int saleId = Convert.ToInt32(DGVSales.CurrentRow.Cells[0].Value);
+            using AppDBContext db = new();
+            Sale? sale = await db.Sales.Include(s => s.Product).Include(s => s.Invoice)
+                                .FirstOrDefaultAsync(s => s.Id == saleId);
+            if (sale == null) { return; }
+            if (MessageBox.Show("هل حقا تريد استرداد المنتج؟", "إجراء استرداد منتج", MessageBoxButtons.YesNo, MessageBoxIcon.Warning) == DialogResult.Yes)
+            {
+                db.Sales.Remove(sale);
+                sale.Product.Count += sale.ProductsCount;
+                db.Invoices.Remove(sale.Invoice);
+                await db.SaveChangesAsync();
+                await ShowSalesPageAsync();
+            }
+        }
+
+        private async void dateTimePickerSalesFrom_ValueChanged(object sender, EventArgs e)
+        {
+            if (pageState != PageState.sales) return;
+
+            await ShowSalesPageAsync();
+        }
+
+        private async void dateTimePickerSalesTo_ValueChanged(object sender, EventArgs e)
+        {
+            if (pageState != PageState.sales) return;
+
+            await ShowSalesPageAsync();
+
+            dateTimePickerFrom.MaxDate = dateTimePickerTo.Value;
+        }
+
+        private async void button16_Click(object sender, EventArgs e)
+        {
+            FormAddMissingProduct formAddMissingProduct = new();
+            formAddMissingProduct.ShowDialog();
+
+            await ShowMissingProductsPageAsync();
+        }
+
+        private async void buttonSideMissingProducts_Click(object sender, EventArgs e)
+        {
+            if (pageState == PageState.missingProducts) return;
+            panelMissingProducts.BringToFront();
+            pageState = PageState.missingProducts;
+            this.Text = "النواقص";
+            await ShowMissingProductsPageAsync();
+
+        }
+
+        private async void button17_Click(object sender, EventArgs e)
+        {
+            if (DGVMissingProducts.CurrentRow is null) return;
+
+            int id = Convert.ToInt32(DGVMissingProducts.CurrentRow.Cells[0].Value);
+            using AppDBContext db = new();
+            MissingProduct? missingProduct = await db.MissingProducts.FirstOrDefaultAsync(c => c.Id == id);
+            if (missingProduct == null) { return; }
+            if (MessageBox.Show("هل حقا تريد حذف الكائن " , "اجراء حذف", MessageBoxButtons.YesNo, MessageBoxIcon.Warning) == DialogResult.Yes)
+            {
+                db.MissingProducts.Remove(missingProduct);
+                await db.SaveChangesAsync();
+                await ShowMissingProductsPageAsync();
+            }
         }
     }
 }

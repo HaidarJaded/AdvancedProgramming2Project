@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using APP2EFCore.Models;
+using Microsoft.EntityFrameworkCore;
 using System.Data;
 
 namespace APP2EFCore.Products
@@ -29,13 +30,27 @@ namespace APP2EFCore.Products
                     c.Name
                 }).ToArray();
             });
-
+            var sections = await Task.Run(() =>
+            {
+                using AppDBContext db = new();
+                return db.Sections.Select(c => new
+                {
+                    c.Id,
+                    c.Name
+                }).ToArray();
+            });
             comboBoxProductCategory.DataSource = categories;
             comboBoxProductCategory.DisplayMember = "Name";
             comboBoxProductCategory.ValueMember = "Id";
 
+            comboBoxProductSection.DataSource = sections;
+            comboBoxProductSection.DisplayMember = "Name";
+            comboBoxProductSection.ValueMember = "Id";
+
             textBoxName.Text = product.Name;
-            comboBoxProductCategory.SelectedText = product.Category.Name;
+            if(product.Section is not null)
+                comboBoxProductSection.SelectedValue= product.Section?.Id;
+            comboBoxProductCategory.SelectedValue = product.Category.Id;
             numericProductPrice.Value = product.Price;
         }
 
@@ -55,9 +70,11 @@ namespace APP2EFCore.Products
             using AppDBContext db = new();
             int categoryId = Convert.ToInt32(comboBoxProductCategory.SelectedValue);
             Category oldCategory = await db.Categories.FindAsync(product.Category.Id);
+            int sectionId = Convert.ToInt32(comboBoxProductSection.SelectedValue);
             product = db.Products.Find(product.Id);
             product.Name = textBoxName.Text;
             product.Category = await db.Categories.FindAsync(categoryId);
+            product.Section = await db.Sections.FindAsync(sectionId);
             product.Price = numericProductPrice.Value;
             if (categoryId != oldCategory.Id)
             {
