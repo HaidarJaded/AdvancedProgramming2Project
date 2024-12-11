@@ -25,6 +25,9 @@
     <Compile Update="Invoices\FormInvoiceInfo.cs">
       <SubType>Form</SubType>
     </Compile>
+    <Compile Update="MissingProducts\FormAddMissingProduct.cs">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Update="Products\FormEditProduct.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -32,6 +35,12 @@
       <SubType>Form</SubType>
     </Compile>
     <Compile Update="Sales\FormAddSales.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="Sections\FormAddSection.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="Sections\FormShowProducts.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Update="Users\FormAddUser.cs">
