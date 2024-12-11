@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace APP2EFCore.Migrations
 {
     [DbContext(typeof(AppDBContext))]
-    [Migration("20240327200942_CenterMigration")]
-    partial class CenterMigration
+    [Migration("20241112175048_AddDescriptionToProduct")]
+    partial class AddDescriptionToProduct
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -21,9 +21,9 @@ namespace APP2EFCore.Migrations
 #pragma warning disable 612, 618
             modelBuilder
                 .HasAnnotation("ProductVersion", "8.0.2")
-                .HasAnnotation("Relational:MaxIdentifierLength", 128);
+                .HasAnnotation("Relational:MaxIdentifierLength", 64);
 
-            SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
+            MySqlModelBuilderExtensions.AutoIncrementColumns(modelBuilder);
 
             modelBuilder.Entity("APP2EFCore.Category", b =>
                 {
@@ -31,11 +31,11 @@ namespace APP2EFCore.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+                    MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("longtext");
 
                     b.Property<int>("ProductsCount")
                         .ValueGeneratedOnAdd()
@@ -53,12 +53,12 @@ namespace APP2EFCore.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+                    MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<DateTime>("Date")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("datetime2")
-                        .HasDefaultValueSql("getdate()");
+                        .HasColumnType("datetime(6)")
+                        .HasDefaultValueSql("CURRENT_TIMESTAMP(6)");
 
                     b.Property<decimal?>("Total")
                         .HasColumnType("decimal(18, 2)");
@@ -77,7 +77,7 @@ namespace APP2EFCore.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+                    MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<decimal>("ProfitRatio")
                         .ValueGeneratedOnAdd()
@@ -87,6 +87,30 @@ namespace APP2EFCore.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Centers");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            ProfitRatio = 0m
+                        });
+                });
+
+            modelBuilder.Entity("APP2EFCore.Models.Section", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Sections");
                 });
 
             modelBuilder.Entity("APP2EFCore.Product", b =>
@@ -95,7 +119,7 @@ namespace APP2EFCore.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+                    MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<int>("CategoryId")
                         .HasColumnType("int");
@@ -107,14 +131,22 @@ namespace APP2EFCore.Migrations
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("longtext");
 
                     b.Property<decimal>("Price")
                         .HasColumnType("decimal(10, 2)");
 
+                    b.Property<decimal>("PurchasePrice")
+                        .HasColumnType("decimal(65,30)");
+
+                    b.Property<int?>("SectionId")
+                        .HasColumnType("int");
+
                     b.HasKey("Id");
 
                     b.HasIndex("CategoryId");
+
+                    b.HasIndex("SectionId");
 
                     b.ToTable("Products");
                 });
@@ -125,12 +157,12 @@ namespace APP2EFCore.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+                    MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<DateTime>("Date")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("datetime2")
-                        .HasDefaultValueSql("getdate()");
+                        .HasColumnType("datetime(6)")
+                        .HasDefaultValueSql("CURRENT_TIMESTAMP(6)");
 
                     b.Property<int>("InvoiceId")
                         .HasColumnType("int");
@@ -149,7 +181,7 @@ namespace APP2EFCore.Migrations
                     b.Property<decimal>("ProductsTotalPrice")
                         .ValueGeneratedOnAddOrUpdate()
                         .HasColumnType("decimal(18, 2)")
-                        .HasComputedColumnSql("[ProductsCount]*[ProductPrice]");
+                        .HasComputedColumnSql("(ProductsCount * ProductPrice)");
 
                     b.HasKey("Id");
 
@@ -166,12 +198,12 @@ namespace APP2EFCore.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+                    MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<DateTime>("Date")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("datetime2")
-                        .HasDefaultValueSql("getdate()");
+                        .HasColumnType("datetime(6)")
+                        .HasDefaultValueSql("CURRENT_TIMESTAMP(6)");
 
                     b.Property<int>("InvoiceId")
                         .HasColumnType("int");
@@ -190,7 +222,7 @@ namespace APP2EFCore.Migrations
                     b.Property<decimal>("ProductsTotalPrice")
                         .ValueGeneratedOnAddOrUpdate()
                         .HasColumnType("decimal(18, 2)")
-                        .HasComputedColumnSql("[ProductsCount]*[ProductPrice]");
+                        .HasComputedColumnSql("(ProductsCount * ProductPrice)");
 
                     b.Property<int>("UserId")
                         .HasColumnType("int");
@@ -217,19 +249,19 @@ namespace APP2EFCore.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+                    MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<string>("Email")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("longtext");
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("longtext");
 
                     b.Property<string>("Password")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("longtext");
 
                     b.Property<int>("Type")
                         .HasColumnType("int");
@@ -247,7 +279,13 @@ namespace APP2EFCore.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.HasOne("APP2EFCore.Models.Section", "Section")
+                        .WithMany("Products")
+                        .HasForeignKey("SectionId");
+
                     b.Navigation("Category");
+
+                    b.Navigation("Section");
                 });
 
             modelBuilder.Entity("APP2EFCore.Purchase", b =>
@@ -306,6 +344,11 @@ namespace APP2EFCore.Migrations
                     b.Navigation("Purchases");
 
                     b.Navigation("Sales");
+                });
+
+            modelBuilder.Entity("APP2EFCore.Models.Section", b =>
+                {
+                    b.Navigation("Products");
                 });
 
             modelBuilder.Entity("APP2EFCore.Product", b =>
