@@ -16,6 +16,8 @@ namespace APP2EFCore.Enums
         products,
         reports,
         invoices,
-        settings
+        settings,
+        sections,
+        missingProducts,
     }
 }
