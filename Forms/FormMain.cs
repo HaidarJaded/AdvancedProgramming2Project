@@ -804,7 +804,11 @@ namespace APP2EFCore.Forms
             {
                 db.Sales.Remove(sale);
                 sale.Product.Count += sale.ProductsCount;
-                db.Invoices.Remove(sale.Invoice);
+                sale.Invoice.Total -= sale.ProductsTotalPrice;
+                if(sale.Invoice.Total == 0)
+                {
+                    db.Invoices.Remove(sale.Invoice);
+                }
                 await db.SaveChangesAsync();
                 await ShowSalesPageAsync();
             }

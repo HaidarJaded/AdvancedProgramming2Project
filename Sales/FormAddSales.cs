@@ -77,7 +77,7 @@ namespace APP2EFCore.Sales
             };
             await db.Sales.AddAsync(sales);
             product.Count -= productCount;
-            if (product.Count <= product.Category.LowestNumber)
+            if (product.Count <= product.Category.LowestNumber && db.MissingProducts.FirstOrDefaultAsync(m => m.Name == product.Name) == null)
             {
                 await db.MissingProducts.AddAsync(
                     new MissingProduct()
