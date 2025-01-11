@@ -38,25 +38,27 @@ namespace APP2EFCore.Forms
 
             pageState = PageState.home;
 
-            await Task.Run(async () =>
+            await Task.Run(() =>
             {
-                using AppDBContext db = new();
-                decimal sumPurchasesPriceMonth = await db.Purchases.Where(x => x.Date.Month == DateTime.Now.Month).SumAsync(x => x.ProductsTotalPrice);
-
-                decimal sumSalesPriceMonth = await db.Sales.Where(x => x.Date.Month == DateTime.Now.Month).SumAsync(x => x.ProductsTotalPrice);
-
-                int usersCount = await db.Users.Where(x => x.Type == UserTypes.casher).CountAsync();
 
                 Invoke(new Action(async () =>
                 {
-                    await UpdateLabel(labelHomePurchasesPrice, sumPurchasesPriceMonth, "ل.س");
-                    await UpdateLabel(labelHomeSalesPrice, sumSalesPriceMonth, "ل.س");
+                    using AppDBContext db = new();
+                    if (Settings.Default.CurrentUserType == UserTypes.admin.ToString())
+                    {
+                        int usersCount = await db.Users.Where(x => x.Type == UserTypes.casher).CountAsync();
+                        decimal sumSalesPriceMonth = await db.Sales.Where(x => x.Date.Month == DateTime.Now.Month).SumAsync(x => x.ProductsTotalPrice);
+                        decimal totalBalance = (await db.Sales.SumAsync(x => x.ProductsTotalPrice)) - (await db.Purchases.SumAsync(x => x.ProductsTotalPrice));
+                        decimal sumPurchasesPriceMonth = await db.Purchases.Where(x => x.Date.Month == DateTime.Now.Month).SumAsync(x => x.ProductsTotalPrice);
+                        await UpdateLabel(labelHomePurchasesPrice, sumPurchasesPriceMonth, "ل.س");
+                        await UpdateLabel(labelHomeSalesPrice, sumSalesPriceMonth, "ل.س");
+                        await UpdateLabel(labelHomeTotalBalance, totalBalance, "ل.س");
+                        await UpdateLabel(labelHomeUsersCount, usersCount);
+                    }
                     await UpdateLabel(labelHomeCategoriesCount, db.Categories.Count());
                     await UpdateLabel(labelHomeProductsCount, db.Products.Count());
-                    await UpdateLabel(labelHomeUsersCount, usersCount);
                     progressBarWait.Visible = false;
                 }));
-
             });
         }
 
@@ -407,6 +409,7 @@ namespace APP2EFCore.Forms
                 panelHomeUsersCount.Hide();
                 panelHomePurchasesPrice.Hide();
                 panelHomeSalesPrice.Hide();
+                panelHomeTotalBalance.Hide();
                 buttonHomeCategory.Hide();
                 buttonHomeUser.Hide();
                 buttonHomePurchase.Hide();

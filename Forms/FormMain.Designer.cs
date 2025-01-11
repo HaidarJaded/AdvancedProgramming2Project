@@ -33,6 +33,9 @@
             panelContainer = new Panel();
             panelHome = new Panel();
             labelClock = new Label();
+            panelHomeTotalBalance = new Panel();
+            labelHomeTotalBalance = new Label();
+            label19 = new Label();
             panelHomeUsersCount = new Panel();
             labelHomeUsersCount = new Label();
             label12 = new Label();
@@ -147,6 +150,7 @@
             progressBarWait = new ProgressBar();
             panelContainer.SuspendLayout();
             panelHome.SuspendLayout();
+            panelHomeTotalBalance.SuspendLayout();
             panelHomeUsersCount.SuspendLayout();
             panelHomeCategoriesCount.SuspendLayout();
             panelHomeSalesPrice.SuspendLayout();
@@ -211,6 +215,7 @@
             // panelHome
             // 
             panelHome.Controls.Add(labelClock);
+            panelHome.Controls.Add(panelHomeTotalBalance);
             panelHome.Controls.Add(panelHomeUsersCount);
             panelHome.Controls.Add(panelHomeCategoriesCount);
             panelHome.Controls.Add(panelHomeSalesPrice);
@@ -235,13 +240,46 @@
             labelClock.TabIndex = 0;
             labelClock.Text = "12:00:00 AM";
             // 
+            // panelHomeTotalBalance
+            // 
+            panelHomeTotalBalance.Anchor = AnchorStyles.None;
+            panelHomeTotalBalance.BackColor = Color.CornflowerBlue;
+            panelHomeTotalBalance.Controls.Add(labelHomeTotalBalance);
+            panelHomeTotalBalance.Controls.Add(label19);
+            panelHomeTotalBalance.Location = new Point(35, 245);
+            panelHomeTotalBalance.Name = "panelHomeTotalBalance";
+            panelHomeTotalBalance.Size = new Size(189, 153);
+            panelHomeTotalBalance.TabIndex = 1;
+            // 
+            // labelHomeTotalBalance
+            // 
+            labelHomeTotalBalance.AutoSize = true;
+            labelHomeTotalBalance.Font = new Font("Myanmar Text", 17F);
+            labelHomeTotalBalance.ForeColor = Color.White;
+            labelHomeTotalBalance.Location = new Point(-2, 93);
+            labelHomeTotalBalance.Name = "labelHomeTotalBalance";
+            labelHomeTotalBalance.Size = new Size(0, 41);
+            labelHomeTotalBalance.TabIndex = 0;
+            labelHomeTotalBalance.TextAlign = ContentAlignment.MiddleCenter;
+            // 
+            // label19
+            // 
+            label19.AutoSize = true;
+            label19.Font = new Font("MV Boli", 17F);
+            label19.ForeColor = Color.White;
+            label19.Location = new Point(33, 14);
+            label19.Name = "label19";
+            label19.Size = new Size(104, 29);
+            label19.TabIndex = 0;
+            label19.Text = "صافي الدرج";
+            // 
             // panelHomeUsersCount
             // 
             panelHomeUsersCount.Anchor = AnchorStyles.None;
             panelHomeUsersCount.BackColor = Color.CornflowerBlue;
             panelHomeUsersCount.Controls.Add(labelHomeUsersCount);
             panelHomeUsersCount.Controls.Add(label12);
-            panelHomeUsersCount.Location = new Point(153, 247);
+            panelHomeUsersCount.Location = new Point(271, 245);
             panelHomeUsersCount.Name = "panelHomeUsersCount";
             panelHomeUsersCount.Size = new Size(189, 153);
             panelHomeUsersCount.TabIndex = 1;
@@ -340,7 +378,7 @@
             panelHomePurchasesPrice.BackColor = Color.CornflowerBlue;
             panelHomePurchasesPrice.Controls.Add(labelHomePurchasesPrice);
             panelHomePurchasesPrice.Controls.Add(label8);
-            panelHomePurchasesPrice.Location = new Point(386, 247);
+            panelHomePurchasesPrice.Location = new Point(504, 245);
             panelHomePurchasesPrice.Name = "panelHomePurchasesPrice";
             panelHomePurchasesPrice.Size = new Size(189, 153);
             panelHomePurchasesPrice.TabIndex = 1;
@@ -1717,6 +1755,8 @@
             panelContainer.ResumeLayout(false);
             panelHome.ResumeLayout(false);
             panelHome.PerformLayout();
+            panelHomeTotalBalance.ResumeLayout(false);
+            panelHomeTotalBalance.PerformLayout();
             panelHomeUsersCount.ResumeLayout(false);
             panelHomeUsersCount.PerformLayout();
             panelHomeCategoriesCount.ResumeLayout(false);
@@ -1888,5 +1928,8 @@
         private Button button17;
         private DataGridView DGVMissingProducts;
         private Button buttonSideMissingProducts;
+        private Panel panelHomeTotalBalance;
+        private Label labelHomeTotalBalance;
+        private Label label19;
     }
 }
